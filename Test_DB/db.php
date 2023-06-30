@@ -5,7 +5,6 @@ require_once("Book.php");
 
 class DAO
 {
-
     private $user = "root";
     private $pwd = "pathSQL";
     private $dsn = "mysql:host=localhost;port=3306;dbname=library;";
@@ -27,6 +26,7 @@ class DAO
          LEFT JOIN user_type as ut
          ON u.user_type_id = ut.user_type_id
          WHERE u.user_id = :login_id');
+
         $stmt->bindValue(":login_id", $login_id);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -42,7 +42,11 @@ class DAO
                                         FROM book AS b
                                         INNER JOIN lent AS l
                                         ON l.book_id = b.book_id
-                                        WHERE b.affiliation_id = :affiliation_id AND l.user_id = :user_id AND l.lending_status = 'impossible'  ORDER BY b.book_id");
+                                        WHERE b.affiliation_id = :affiliation_id
+                                        AND l.user_id = :user_id
+                                        AND l.lending_status = 'impossible'
+                                        ORDER BY b.book_id");
+
         $stmt->bindValue(":user_id", $user->getUserId());
         $stmt->bindValue(":affiliation_id", $user->getAffiliationId());
         $stmt->execute();
@@ -57,9 +61,12 @@ class DAO
         $stmt = $this->conn->prepare("SELECT l.user_id, b.book_id, b.book_name, b.author, b.publisher, b.remarks, b.image, l.lending_status
                                          FROM book AS b
                                          LEFT JOIN lent2 AS l
-                                         ON l.book_id = b.book_id ORDER BY b.book_id");
+                                         ON l.book_id = b.book_id 
+                                         WHERE affiliation_id = :affiliation_id
+                                         ORDER BY b.book_id");
+
         $stmt->bindValue(":affiliation_id", $user->getAffiliationId());
-        $res = $stmt->execute();
+        $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return json_encode($result);
@@ -72,9 +79,12 @@ class DAO
                                             FROM book AS b         
                                             LEFT JOIN lent AS l            
                                             ON l.book_id = b.book_id           
-                                            WHERE b.affiliation_id = :affiliation_id AND l.lending_status = 'impossible'  ORDER BY b.book_id");
+                                            WHERE b.affiliation_id = :affiliation_id 
+                                            AND l.lending_status = 'impossible'  
+                                            ORDER BY b.book_id");
+
         $stmt->bindValue(":affiliation_id", $user->getAffiliationId());
-        $res = $stmt->execute();
+        $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return json_encode($result);
