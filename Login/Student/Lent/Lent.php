@@ -1,65 +1,19 @@
 <?php
+// DAO.php,USER.phpを読み込み
+require_once("../../../Test_DB/db.php");
+require_once("../../../Test_DB/User.php");
+require_once("../../../Test_DB/Book.php");
+
 session_start();
 if (!isset($_SESSION["user_id"])) {
   header("Location: login.php");
   exit;
 }
 
-// POSTされたJSON文字列を取り出し
-$raw = file_get_contents('php://input'); // POSTされた生のデータを受け取る
-print($raw);
-$data = json_decode($raw); // json形式をphp変数に変換
-print($data);
+$dao = new DAO();
+$user = $dao->getUser($_SESSION["user_id"]);
+$book = $dao->clickBook($_POST["book_id"]);
 
-var_dump($json);
-$user_id = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : "";
-$user_name = isset($_SESSION["user_name"]) ? $_SESSION["user_name"] : "";
-$user_type_name = isset($_SESSION["user_type_name"]) ? $_SESSION["user_type_name"] : "";
-$affiliation_name = isset($_SESSION["affiliation_name"]) ? $_SESSION["affiliation_name"] : "";
-// データベース接続情報
-$host = "localhost";
-$user = "root";
-$pwd = "pathSQL";
-$dbname = "library";
-// dsnは以下の形でどのデータベースかを指定する
-$dsn = "mysql:host={$host};port=3306;dbname={$dbname};";
-try {
-  //データベースに接続
-  $conn = new PDO($dsn, $user, $pwd);
-  // bookテーブルからbook_idに対応する書籍情報を取得するためのSQL文
-  $sql = "SELECT * FROM book WHERE book_id = :book_id";
-  // SQL実行準備
-  $stmt = $conn->prepare($sql);
-  // :book_idにセッション変数から取得したbook_idを代入
-  $stmt->bindValue(":book_id", $_POST["book_id"]);
-  // SQL文を実行
-  $stmt->execute();
-
-  // 結果を取得
-  $book = $stmt->fetch(PDO::FETCH_ASSOC);
-  // 書籍の情報を変数に格納
-  $book_name = $book['book_name'];
-  $author = $book['author'];
-  $publisher = $book['publisher'];
-  // lentテーブルから該当の行を取得するためのSQL文
-  $sql = "SELECT * FROM lent WHERE user_id = :user_id AND book_id = :book_id";
-  // SQL実行準備
-  $stmt = $conn->prepare($sql);
-  // パラメーターに値をバインド
-  $stmt->bindValue(":user_id", $user_id);
-  $stmt->bindValue(":book_id", $_POST["book_id"]);
-  // SQL文を実行
-  $stmt->execute();
-  // 結果を取得
-  $lentInfo = $stmt->fetch(PDO::FETCH_ASSOC);
-  // 貸出状況と返却予定日を変数に格納
-  $lending_status = $lentInfo['lending_status'];
-  $return_due_date = $lentInfo['return_due_date'];
-  $image = $lentInfo['image'];
-} catch (PDOException $e) {
-  //データベースへの接続失敗
-  $e->getMessage();
-}
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -77,9 +31,9 @@ try {
       <div id="contents"><a href="../Home/StudentHome.php">白石学園ポータルサイト</a>
       </div>
       <div id="login">
-        ログイン者:<?php echo $user_name ?><br>
-        区分:<?php echo $user_type_name ?><br>
-        学科:<?php echo $affiliation_name ?>
+        ログイン者:<?php echo $user->getUserName();  ?><br>
+        区分:<?php echo $user->getAffiliationName(); ?><br>
+        学科:<?php echo $user->getUserTypeName(); ?>
       </div>
     </div>
   </div> <!--パンくずリスト-->
@@ -87,22 +41,22 @@ try {
     <li><a href="../Home/StudentHome.php">ホーム</a></li>
   </ul>
   <div class="books"> <!--本の詳細-->
-    <img src="../../../Image/<?php $image ?>" class="example1" style="vertical-align:top">
+    <img src="<?php echo '../../../image/' . $book["image"]; ?>" + class="example1" style="vertical-align:top">
     <div class="text">
       <p>
-      <h2>著書名:<?php echo $book_name; ?></h2>
+      <h2>著書名:<?php echo $book["book_name"]; ?></h2>
       </p>
       <p>
-      <h2>著者名 :<?php echo $author; ?></h2>
+      <h2>著者名 :<?php echo $book["author"]; ?></h2>
       </p>
       <p>
-      <h2>出版社：<?php echo $publisher; ?></h2>
+      <h2>出版社：<?php echo $book["publisher"]; ?></h2>
       <p>
       <p>
-      <h2>貸出状況： <?php echo $lending_status; ?></h2>
+      <h2>貸出状況： <?php echo $book["lending_status"]; ?></h2>
       </p>
       <p>
-      <h2>返却予定日： <?php echo $return_due_date; ?></h2>
+      <h2>返却予定日： <?php echo $book["return_due_date"]; ?></h2>
       </p>
     </div>
   </div> <!--貸出、戻るボタン-->
