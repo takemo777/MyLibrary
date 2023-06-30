@@ -1,5 +1,5 @@
 <?php
-
+echo "ok";
 class Book
 {
 
