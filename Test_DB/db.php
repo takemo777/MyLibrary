@@ -6,7 +6,7 @@ class DAO
 {
 
     private $user = "root";
-    private $pwd = "pathSQL";
+    private $pwd = "";
     private $dsn = "mysql:host=localhost;port=3306;dbname=library;";
     private $conn;
 
