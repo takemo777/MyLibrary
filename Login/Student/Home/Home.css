@@ -5,17 +5,17 @@ body{
 
 .main{
 padding: 1px;
-background-color:	#3333FF;
+background-color:#ff8c00;
 margin:0;
 }
 
 a{
-    color: #000000;
-    text-decoration: none;
+color: #000000;
+text-decoration: none;
 }
 
-.grayAdd{
-    filter : grayscale(1);
+.graAdd{
+filter : "grayscale(100%)";
 }
 
 #contents{
@@ -117,12 +117,30 @@ width: 300px;
 text-align: center;
 }
 
+.login-button{
+width: 100px;
+height: 25px;
+float: right;
+margin : 10px;
+background: rgb(79, 79, 204);
+color: #FFF;
+}
+
 /*履歴ボタン*/
-.history-button {
+.history-button{
 width: 150px;
 height: 40px;
 float: right;
 margin : 10px;
-background: #00CC66;
+background: rgb(79, 79, 204);
+color: #FFF;
+}
+
+.Qr-button{
+width: 150px;
+height: 40px;
+float: right;
+margin : 10px;
+background: rgb(79, 79, 204);
 color: #FFF;
 }

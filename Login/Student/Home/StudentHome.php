@@ -14,6 +14,7 @@ $dao = new DAO();
 $user = $dao->getUser($user_id);
 $json_user_id = json_encode($user->getUserId());
 // クラスの本を取得
+//echo $user->getAffiliationId();
 $allBooks = $dao->getAllBooks($user);
 // 自分が借りている本を取得
 $myBooks = $dao->getMyBooks($user);
@@ -42,8 +43,8 @@ $lentBooks = $dao->getLentNowBooks($user);
         </div>
     </div>
     <!--履歴ボタン-->
-    <button id="history-button" class="history-button" onclick="window.location.href='../History/History.php'">履歴</button><br>
-    <button id="history-button" class="history-button" onclick="openQrCodeWindow();">本のQRコード読み取り</button><br>
+    <button id="history-button" class="history-button" onclick="window.location.href='../History/History.php'">履歴</button>
+    <button id="Qr-button" class="Qr-button" onclick="openQrCodeWindow();">本のQRコード読み取り</button><br>
     <!--パンくず-->
     <ul class="breadcrumb">
         <li><a href="../Home/StudentHome.php">ホーム</a></li>
@@ -53,11 +54,11 @@ $lentBooks = $dao->getLentNowBooks($user);
         <input type="text" id="search-input" class="search-input" placeholder="検索欄">
         <button id="search-button" class="search-button" onclick="searchImages()">検索</button>
     </div><br>
-    <p>あなたが貸出中の本</p>
+    <p class ="showbook">あなたが貸出中の本</p>
     <br>
     <div class="my-image-container"></div>
     <hr style="border-top: 1px solid #007BFF; ;height:1px;width:100%;"><!--横線-->
-    <p>全ての本</p>
+    <p class ="showbook">全ての本</p>
     <div class="all-image-container"></div>
     <script>
         //文字を改行する関数
@@ -157,19 +158,19 @@ $lentBooks = $dao->getLentNowBooks($user);
         let user_id = <?php echo $json_user_id; ?>;
         ////貸出、返却、その他の判別
         function Golink(totalImages, imageIndex) {
-            let link = "";
+            let link = "../Lent/Lent.php";
+            // mybooksもしくはallBooksの要素分for文を回す
             for (let i = 0; i < lentBooks.length; i++) {
-
+                // lentBooksの要素数分for文を回す
                 if (lentBooks[i].book_id === totalImages[imageIndex].book_id) {
-                    if (totalImages[imageIndex].user_id === user_id) {
+                    // 貸し出しているのは自分か？
+                    if (parseInt(totalImages[imageIndex].user_id) === parseInt(user_id)) {
                         link = "../ReturnLent/ReturnLent.php";
                         break;
                     } else {
                         link = "Test.php";
                         break;
                     }
-                } else {
-                    link = "../Lent/Lent.php";
                 }
             }
             window.location.href = link;
@@ -186,8 +187,7 @@ $lentBooks = $dao->getLentNowBooks($user);
             qrCodeWindow.onbeforeunload = function() {
                 var qrCodeResult = qrCodeWindow.document.getElementById('qr').value;
                 var qrCodeValue = parseInt(qrCodeResult);
-                //Golink(allBooks, qrCodeValue);
-                window.location.href = qrCodeValue;
+                Golink(allBooks, qrCodeValue);
             };
         }
 
