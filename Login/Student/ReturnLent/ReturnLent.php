@@ -1,157 +1,146 @@
 <?php
-   // データベース接続情報
-   $host = "localhost";
-   $user = "root";
-   $pwd = "psw";
-   $dbname = "library";
-   // dsnは以下の形でどのデータベースかを指定する
-   $dsn = "mysql:host={$host};port=3306;dbname={$dbname};";
-   try{
-       //データベースに接続
-       $conn = new PDO($dsn, $user, $pwd);
-       // ログインしているユーザーが借りている本の名前とパスを取得するためのSQL文
-       $sql = "update lent
-               set return_time = NULL,
-                   lendig_status = 'impossible'
-               where user_id = :user_id";
-       //SQL実行準備
-       $stmt = $conn->prepare($sql);
-       //:user_idにセッション変数から取得したuser_idを代入
-       $stmt->bindValue(":user_id",$user_id);
-       //SQL文を実行
-       $stmt->execute();
-   }catch(PDOException $e){
-       //データベースへの接続失敗
-       $e->getMessage();
-   }
-?>
+// DAO.php,USER.phpを読み込み
+require_once("../../../Test_DB/db.php");
+require_once("../../../Test_DB/User.php");
+require_once("../../../Test_DB/Book.php");
 
+session_start();
+if (!isset($_SESSION["user_id"])) {
+  header("Location: login.php");
+  exit;
+}
+
+$dao = new DAO();
+$user = $dao->getUser($_SESSION["user_id"]);
+$book = $dao->clickBook($_POST["book_id"]);
+
+// $dao->returnProcess($user->getUserId(), $book["book_id"]);
+
+?>
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-<meta charset="UTF-8">
-<title>白石学園ポータルサイト</title>
-<link rel="stylesheet" href="Lent.css" type="text/css">
+  <meta charset="UTF-8">
+  <title>白石学園ポータルサイト</title>
+  <link rel="stylesheet" href="ReturnLent.css" type="text/css">
 </head>
 
 <body>
-<div class="main">
-     <div id="contents">白石学園ポータルサイト
-     </div>
-     <div id="login">ログイン者:大野 俊輔<br>
-                     区分:学生<br>
-                     学科:ITE3-2
-     </div>
-     
-</div> <!--パンくずリスト-->
-     <ul class="breadcrumb">
-        <li><a href="index.php">ホーム</a></li>
-        <li><a href="test.php">詳細</a></li>
-    </ul>
-
-    
-<div class="books"> <!--本の詳細-->
-     <img src="image/1.jpg" class="example1" style="vertical-align:top">
-     <div class="text">
-          <p><h2>著書名:70年でわかるアプリ開発の教科書</h3></p>
-          <p><h2>著者名 : 大谷翔平</h2></p>
-          <p><h2>出版社： 少年ジャンプ</h2><p>
-          <p><h2>貸出状況： 貸出中</h2></p>
-          <p><h2>返却予定日：-</h2></p>
-
-
-
-<?php
-    $fixedDate = date('Y-m-d'); // 固定したい日付を指定
-    $timezone = 'Your_Timezone'; // 自分のタイムゾーンに合わせて設定する
-    
-    // 現在の日付を取得
-    $currentTime = time();
-    
-    // 一週間後の日付を計算
-    $oneWeekLater = strtotime('+1 week', strtotime($fixedDate));
-    
-    // 一週間後の日付から現在の日付を引いて、日数の差を計算
-    $daysDifference = floor(($oneWeekLater - $currentTime) / (60 * 60 * 24));
-
-    // 結果を出力
-    echo $fixedDate;
-    if ($daysDifference > 0) {
-        echo "一週間後まであと " . $daysDifference . " 日あります。";
-    } elseif ($daysDifference < 0) {
-        echo "一週間後はすでに過ぎています。";
-    } else {
-        echo "今日が一週間後の日付です。";
-    }
-    ?>
-</div>
-
-</div> <!--貸出、戻るボタン-->
+  <div class="main">
+    <!--ヘッダー-->
+    <div class="main">
+      <div id="contents"><a href="../Home/StudentHome.php">白石学園ポータルサイト</a>
+      </div>
+      <div id="login">
+        ログイン者:<?php echo $user->getUserName();  ?><br>
+        区分:<?php echo $user->getAffiliationName(); ?><br>
+        学科:<?php echo $user->getUserTypeName(); ?>
+      </div>
+    </div>
+  </div> <!--パンくずリスト-->
+  <ul class="breadcrumb">
+    <li><a href="../Home/StudentHome.php">ホーム</a></li>
+  </ul>
+  <div class="books"> <!--本の詳細-->
+    <img src="<?php echo '../../../image/' . $book["image"]; ?>" + class="example1" style="vertical-align:top">
+    <div class="text">
+      <p>
+      <h2>著書名:<?php echo $book["book_name"]; ?></h2>
+      </p>
+      <p>
+      <h2>著者名 :<?php echo $book["author"]; ?></h2>
+      </p>
+      <p>
+      <h2>出版社：<?php echo $book["publisher"]; ?></h2>
+      <p>
+      <p>
+      <h2>貸出状況： <?php echo $book["lending_status"]; ?></h2>
+      </p>
+      <p>
+      <h2>返却予定日： <?php echo $book["return_due_date"]; ?></h2>
+      </p>
+    </div>
+  </div> <!--貸出、戻るボタン-->
   <div class="buttonContainer">
-  <button id="rentButton" onclick="openDialog()">返却する</button>
-  <button id="returnButton" onclick="redirectToHome()">履歴に戻る</button>
-</div>
-
-<!--ダイアログボックスの表示-->
-<div id="dialog" class="dialog">
-  <div class="dialog-content">
-<!--現在の日付から一週間後の日付の表氏-->
-<?php
-    $currentDate = date('Y-m-d');
-    $oneWeekLater = date('Y年m月d日', strtotime('+1 week', strtotime($currentDate)));
-    // 結果を表示
-    echo '<p style="margin-top: -50px; margin-left: -10px;">'."
-    この本を返却しますか？";
-  ?>
+    <button id="rentButton" onclick="openDialog()">返却する</button>
+    <button id="returnButton" onclick="redirectToHome()">戻る</button>
+  </div>
+  <!--ダイアログボックスの表示-->
+  <div id="dialog" class="dialog">
+    <div class="dialog-content">
+      <!--現在の日付から一週間後の日付の表氏-->
+      <?php
+      $currentDate = date('Y-m-d');
+      $oneWeekLater = date('Y年m月d日', strtotime('+1 week', strtotime($currentDate)));
+      // 結果を表示
+      echo '<p style="margin-top: -50px; margin-left: -10px;">' . $oneWeekLater  . " まで
+    この本を借りますか？";
+      ?>
       <button id="yesButton" onclick="openComplete()">はい</button>
       <button id="noButton" onclick="closeDialog()">いいえ</button>
-    
-<script>
-
-</script>
+      <script>
+      </script>
+    </div>
   </div>
-</div>
-
-<div id="dialog2">
-  <div class="dialog2-content">
-  <?php
-    echo  '<p style="margin-top: -50px; margin-left: -10px;">'," 返却完了！";
-  ?>
-  <button id="complete" class="okButton"onclick="closeDialog2()">OK</button>
+  <div id="dialog2">
+    <div class="dialog2-content">
+      <button id="complete" onclick="closeDialog2()">完了しました</button>
+    </div>
   </div>
-</div>
 
-<script> 
-  //はいいいえダイアログ
-  function openDialog() {
-    var dialog = document.getElementById("dialog");
-    console.log(dialog);
-    dialog.style.display = "block";
-  }
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+  <script>
+    //はいいいえダイアログ
+    function openDialog() {
+      var dialog = document.getElementById("dialog");
+      console.log(dialog);
+      dialog.style.display = "block";
+    }
     //完了ダイアログ
     function openComplete() {
-    var dialog = document.getElementById("dialog2");
-    closeDialog();
-    dialog.style.display = "block";
-  }
-  
-  function closeDialog() {
-    var dialog = document.getElementById("dialog");
-    dialog.style.display = "none";
-  }
 
-  function closeDialog2() {
-    // 別のページにリダイレクト（移動）
-    window.location.href = "../Home/Home.php";
-  }
+      var dialog = document.getElementById("dialog2");
 
-  //ホームに戻る
-  function redirectToHome() {
-    // 別のページにリダイレクト（移動）
-    window.location.href = "../Home/Home.php";
-  }
-</script>
+      const user_id = <?php echo $user->getUserId(); ?>;
+      const book_id = <?php echo $book["book_id"]; ?>;
 
+      $.ajax({
+
+        type: 'post',
+        url: "../../../Test_DB/return.php",
+        // value1=1とvalue2=2というデーターを、Ajaxの非同期通信によって、PHPに送信しています。
+        data: {
+          "user_id": user_id,
+          "book_id": book_id
+        },
+        // PHPからのデーターは、success: function(result)という部分で、resultという変数に格納されます。
+        // このresult変数には、phpによって、echoで出力されたデーターが格納されます。
+        // 残念なことにJavaScriptがPHPの出力として受け取れるのは、result変数一つの値だけ
+        success: function(result) {
+          //非同期通信に成功したときの処理
+        }
+      });
+      closeDialog();
+      dialog.style.display = "block";
+    }
+
+    function closeDialog() {
+      var dialog = document.getElementById("dialog");
+      dialog.style.display = "none";
+    }
+
+    function closeDialog2() {
+      var dialog = document.getElementById("dialog2");
+      dialog.style.display = "none";
+    }
+    //ホームに戻る
+    function redirectToHome() {
+      // 別のページにリダイレクト（移動）
+      window.location.href = "../Home/StudentHome.php";
+    }
+  </script>
 </body>
+
 </html>

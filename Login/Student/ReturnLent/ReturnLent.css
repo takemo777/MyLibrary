@@ -2,7 +2,7 @@
 /*ヘッダーのスタイル*/
 .main{
   padding: 1px;
-  /*background-color:#ff8c00;*/
+  background-color:#ff8c00;
   margin:0;
 }
 
@@ -175,10 +175,10 @@
     margin-right: 10px; /* 右側の余白 */
     font-size: 22px; /* テキストの大きさを変更する */
   }
-  .okButton /*okボタン*/{
+  #okButton /*okボタン*/{
     position: absolute;
     top: 270px; /* 上からの位置 */
-    left: 600px; /* 左からの位置 */
+    left: 500px; /* 左からの位置 */
     width: 150px; /* ボタンの幅 */
     height: 55px; /* ボタンの高さ */
     background-color: greenyellow; /* ボタンの背景色 */
@@ -190,3 +190,7 @@
     margin-right: 10px; /* 右側の余白 */
     font-size: 22px; /* テキストの大きさを変更する */
   }
+  
+
+  
+  

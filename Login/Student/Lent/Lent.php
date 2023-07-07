@@ -75,10 +75,8 @@ $book = $dao->clickBook($_POST["book_id"]);
       echo '<p style="margin-top: -50px; margin-left: -10px;">' . $oneWeekLater  . " まで
     この本を借りますか？";
       ?>
-      <button id="yesButton" onclick="openComplete()">はい</button>
+      <button id="yesButton" onclick=openComplete()>はい</button>
       <button id="noButton" onclick="closeDialog()">いいえ</button>
-      <script>
-      </script>
     </div>
   </div>
   <div id="dialog2">
@@ -86,6 +84,9 @@ $book = $dao->clickBook($_POST["book_id"]);
       <button id="complete" onclick="closeDialog2()">完了しました</button>
     </div>
   </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
   <script>
     //はいいいえダイアログ
     function openDialog() {
@@ -95,7 +96,28 @@ $book = $dao->clickBook($_POST["book_id"]);
     }
     //完了ダイアログ
     function openComplete() {
+
       var dialog = document.getElementById("dialog2");
+
+      const user_id = <?php echo $user->getUserId(); ?>;
+      const book_id = <?php echo $book["book_id"]; ?>;
+
+      $.ajax({
+
+        type: 'post',
+        url: "../../../Test_DB/lent.php",
+        // value1=1とvalue2=2というデーターを、Ajaxの非同期通信によって、PHPに送信しています。
+        data: {
+          "user_id": user_id,
+          "book_id": book_id
+        },
+        // PHPからのデーターは、success: function(result)という部分で、resultという変数に格納されます。
+        // このresult変数には、phpによって、echoで出力されたデーターが格納されます。
+        // 残念なことにJavaScriptがPHPの出力として受け取れるのは、result変数一つの値だけ
+        success: function(result) {
+          //非同期通信に成功したときの処理
+        }
+      });
       closeDialog();
       dialog.style.display = "block";
     }
