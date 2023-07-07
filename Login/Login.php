@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>ログイン</title>
   <style>
@@ -10,19 +11,23 @@
       justify-content: center;
       height: 100vh;
     }
+
     .login-box {
       border: 2px solid black;
       padding: 20px;
       text-align: center;
     }
+
     .input-field {
       margin-bottom: 10px;
     }
+
     .title {
       font-size: 30px;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="login-box">
@@ -41,4 +46,5 @@
     </div>
   </div>
 </body>
+
 </html>

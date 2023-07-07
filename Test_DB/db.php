@@ -109,7 +109,7 @@ class DAO
     }
 
     // 貸出処理
-    public function lendingProcess($book_id, $user_id)
+    public function lendingProcess($user_id, $book_id)
     {
         $sql = "INSERT INTO lent(book_id, user_id, lent_time, return_due_date,lending_status)
                  VALUES (:book_id, :user_id, :lent_time, :return_due_date,'impossible')";
@@ -134,7 +134,22 @@ class DAO
         $stmt->execute();
     }
 
-    public function returnProcess()
+    // 返却処理
+    public function returnProcess($user_id, $book_id)
     {
+        $sql = "UPDATE lent
+                SET return_time=:return_time,lending_status='possible'
+                WHERE user_id = :user_id AND book_id = :book_id AND lending_status = 'impossible'";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $return_time = new DateTime("+7 day");
+        $return_time = $return_time->format('Y-m-d');
+
+        $stmt->bindValue(":return_time", $return_time);
+        $stmt->bindValue(":user_id", $user_id);
+        $stmt->bindValue(":book_id", $book_id);
+
+        $stmt->execute();
     }
 }
