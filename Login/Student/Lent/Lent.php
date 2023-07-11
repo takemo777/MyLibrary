@@ -102,20 +102,15 @@ $book = $dao->clickBook($_POST["book_id"]);
       const user_id = <?php echo $user->getUserId(); ?>;
       const book_id = <?php echo $book["book_id"]; ?>;
 
+      // 非同期通信でAjax.phpにuser_idとbook_idを送信
       $.ajax({
 
         type: 'post',
-        url: "../../../Test_DB/lent.php",
-        // value1=1とvalue2=2というデーターを、Ajaxの非同期通信によって、PHPに送信しています。
+        url: "../../../Test_DB/Ajax.php",
         data: {
           "user_id": user_id,
-          "book_id": book_id
-        },
-        // PHPからのデーターは、success: function(result)という部分で、resultという変数に格納されます。
-        // このresult変数には、phpによって、echoで出力されたデーターが格納されます。
-        // 残念なことにJavaScriptがPHPの出力として受け取れるのは、result変数一つの値だけ
-        success: function(result) {
-          //非同期通信に成功したときの処理
+          "book_id": book_id,
+          "processing": "lent"
         }
       });
       closeDialog();

@@ -54,11 +54,11 @@ $lentBooks = $dao->getLentNowBooks($user);
         <input type="text" id="search-input" class="search-input" placeholder="検索欄">
         <button id="search-button" class="search-button" onclick="searchImages()">検索</button>
     </div><br>
-    <p class ="showbook">あなたが貸出中の本</p>
+    <p class="showbook">あなたが貸出中の本</p>
     <br>
     <div class="my-image-container"></div>
     <hr style="border-top: 1px solid #007BFF; ;height:1px;width:100%;"><!--横線-->
-    <p class ="showbook">全ての本</p>
+    <p class="showbook">全ての本</p>
     <div class="all-image-container"></div>
     <script>
         //文字を改行する関数
@@ -168,7 +168,7 @@ $lentBooks = $dao->getLentNowBooks($user);
                         link = "../ReturnLent/ReturnLent.php";
                         break;
                     } else {
-                        link = "Test.php";
+                        link = "../Other/Other.php";
                         break;
                     }
                 }

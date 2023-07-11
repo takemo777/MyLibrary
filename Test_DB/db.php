@@ -44,7 +44,7 @@ class DAO
                                         ON l.book_id = b.book_id
                                         WHERE b.affiliation_id = :affiliation_id
                                         AND l.user_id = :user_id
-                                        AND l.lending_status = 'impossible'
+                                        AND l.lending_status = '貸出中'
                                         ORDER BY b.book_id");
 
         $stmt->bindValue(":user_id", $user->getUserId());
@@ -55,7 +55,7 @@ class DAO
         return json_encode($result);
     }
 
-    // ログインしているユーザーが借りている本の情報を取得するためのSQL文
+    // ログインしているユーザーのクラスの本の情報を取得するためのSQL文
     public function getAllBooks(&$user)
     {
         $stmt = $this->conn->prepare("SELECT l.user_id, b.book_id, b.book_name, b.author, b.publisher, b.remarks, b.image, l.lending_status
@@ -80,7 +80,7 @@ class DAO
                                             LEFT JOIN lent AS l            
                                             ON l.book_id = b.book_id           
                                             WHERE b.affiliation_id = :affiliation_id 
-                                            AND l.lending_status = 'impossible'  
+                                            AND l.lending_status = '貸出中'  
                                             ORDER BY b.book_id");
 
         $stmt->bindValue(":affiliation_id", $user->getAffiliationId());
@@ -93,7 +93,7 @@ class DAO
     // 選択した本の情報を取得
     public function clickBook($book_id): array
     {
-        $sql = "SELECT l.user_id, b.book_id, b.book_name, b.author, b.publisher, b.remarks, b.image, l.return_due_date, l.lending_status
+        $sql = "SELECT l.user_id, b.book_id, b.book_name, b.author, b.publisher, b.remarks, b.image, COALESCE(l.return_due_date, '- - -') AS return_due_date, COALESCE(l.lending_status, '貸出可能') AS lending_status
                 FROM book as b
                 LEFT JOIN lent2 as l
                 ON b.book_id = l.book_id
@@ -112,7 +112,7 @@ class DAO
     public function lendingProcess($user_id, $book_id)
     {
         $sql = "INSERT INTO lent(book_id, user_id, lent_time, return_due_date,lending_status)
-                 VALUES (:book_id, :user_id, :lent_time, :return_due_date,'impossible')";
+                 VALUES (:book_id, :user_id, :lent_time, :return_due_date,'貸出中')";
         // SQL実行準備
         $stmt = $this->conn->prepare($sql);
 
@@ -138,8 +138,8 @@ class DAO
     public function returnProcess($user_id, $book_id)
     {
         $sql = "UPDATE lent
-                SET return_time=:return_time,lending_status='possible'
-                WHERE user_id = :user_id AND book_id = :book_id AND lending_status = 'impossible'";
+                SET return_due_date='- - -',return_time=:return_time,lending_status='貸出可能'
+                WHERE user_id = :user_id AND book_id = :book_id AND lending_status = '貸出中'";
 
         $stmt = $this->conn->prepare($sql);
 
@@ -151,5 +151,25 @@ class DAO
         $stmt->bindValue(":book_id", $book_id);
 
         $stmt->execute();
+    }
+
+    // 履歴を取得する関数
+    public function getHistory($user_id)
+    {
+        // 貸出履歴の取得
+        $sql = "SELECT l.lent_id, l.book_id, l.return_time, l.return_due_date, b.image, b.book_name 
+                FROM lent AS l
+                INNER JOIN book AS b
+                ON l.book_id = b.book_id
+                WHERE l.user_id = :user_id 
+                ORDER BY l.lent_id DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(":user_id", $user_id);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
     }
 }
