@@ -43,7 +43,7 @@ $history = $dao->getHistory($user->getUserId());
   <header>
     <div class="header-wrapper">
       <h1>
-        <a href="../Home/Home.php">図書館システム</a>
+        <a href="../Home/StudentHome.php">図書館システム</a>
       </h1>
       <nav class="pc-nav">
         <ul>
@@ -57,7 +57,7 @@ $history = $dao->getHistory($user->getUserId());
   <div class="header-divider"></div>
   <div class="main">
     <p class="breadcrumbs">
-      <a href="../Home/Home.php">ホーム</a> &gt; 履歴
+      <a href="../Home/StudentHome.php">ホーム</a> &gt; 履歴
     </p>
     <h2>貸出履歴</h2>
     <?php foreach ($history as $item) : ?>
