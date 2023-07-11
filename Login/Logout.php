@@ -1,20 +1,29 @@
-<?php
-session_start();
-$_SESSION = array();
-session_destroy();
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
 <title>ログアウト</title>
-<meta http-equiv="refresh" content=" 5; url=Login.php"><!--5秒後にログインページに戻る-->
+<script>
+function countdown() {
+  var seconds = 5; // カウントダウンの秒数
+  var countdownElement = document.getElementById("countdown");
+
+  var countdownInterval = setInterval(function() {
+    seconds--;
+    countdownElement.innerHTML = seconds;
+
+    if (seconds <= 0) {
+      clearInterval(countdownInterval);
+      window.location.href = "Login.php"; 
+    }
+  }, 1000);
+}
+</script>
 </head>
-<body>
+<body onload="countdown()">
 <h1>
 <font size='5'>ログアウトしました</font>
 </h1>
-<p>5秒後に自動でログインページに戻ります</p>
+<p><span id="countdown">5</span>秒後に自動でログインページに戻ります</p>
 <p><a href='Login.php'>ログインページ</a></p>
 </body>
 </html>
