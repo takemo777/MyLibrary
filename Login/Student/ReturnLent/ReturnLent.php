@@ -20,7 +20,7 @@ $book = $dao->clickBook($_POST["book_id"]);
 
 <head>
   <meta charset="UTF-8">
-  <title>白石学園ポータルサイト</title>
+  <title>図書館システム</title>
   <link rel="stylesheet" href="ReturnLent.css" type="text/css">
 </head>
 
