@@ -1,4 +1,8 @@
 <?php
+require_once("../../../Test_DB/db.php");
+require_once("../../../Test_DB/User.php");
+
+
 session_start();
 
 if (!isset($_SESSION["user_id"])) {
@@ -6,33 +10,11 @@ if (!isset($_SESSION["user_id"])) {
   exit;
 }
 
-$user_id = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : "";
-$user_name = isset($_SESSION["user_name"]) ? $_SESSION["user_name"] : "";
-$user_type_name = isset($_SESSION["user_type_name"]) ? $_SESSION["user_type_name"] : "";
-$affiliation = isset($_SESSION["affiliation"]) ? $_SESSION["affiliation"] : "";
+$dao = new DAO();
+$user = $dao->getUser($_SESSION["user_id"]);
+// 今まで借りた本を取得
+$history = $dao->getHistory($user->getUserId());
 
-// データベース接続情報
-$host = "localhost";
-$user = "root";
-$pwd = "pathSQL";
-$dbname = "library";
-$dsn = "mysql:host={$host};port=3306;dbname={$dbname};";
-
-try {
-  $conn = new PDO($dsn, $user, $pwd);
-
-  // 貸出履歴の取得
-  $sql = "SELECT l.book_id, l.return_time, l.return_due_date, b.image, b.book_name
-          FROM lent AS l
-          INNER JOIN book AS b ON l.book_id = b.book_id
-          WHERE l.user_id = :user_id";
-  $stmt = $conn->prepare($sql);
-  $stmt->bindValue(":user_id", $user_id);
-  $stmt->execute();
-  $history = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-  $e->getMessage();
-}
 ?>
 
 <!DOCTYPE html>
@@ -65,9 +47,9 @@ try {
       </h1>
       <nav class="pc-nav">
         <ul>
-          <li>ログイン者：<?php echo $user_name; ?></li>
-          <li>区分：<?php echo $user_type_name; ?></li>
-          <li>学科：<?php echo $affiliation; ?></li>
+          <li>ログイン者：<?php echo $user->getUserName(); ?></li>
+          <li>区分：<?php echo $user->getUserTypeName(); ?></li>
+          <li>学科：<?php echo $user->getAffiliationName() ?></li>
         </ul>
       </nav>
     </div>
