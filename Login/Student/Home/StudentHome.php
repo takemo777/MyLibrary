@@ -196,7 +196,7 @@ $lentBooks = $dao->getLentNowBooks($user);
                         link = "../ReturnLent/ReturnLent.php";
                         break;
                     } else {
-                        link = "Test.php";
+                        link = "../Other/Other.php";
                         break;
                     }
                 }
