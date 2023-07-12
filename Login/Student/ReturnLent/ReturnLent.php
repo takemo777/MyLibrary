@@ -6,7 +6,7 @@ require_once("../../../Test_DB/Book.php");
 
 session_start();
 if (!isset($_SESSION["user_id"])) {
-  header("Location: login.php");
+  header("Location: ../../Login.php");
   exit;
 }
 
@@ -20,7 +20,7 @@ $book = $dao->clickBook($_POST["book_id"]);
 
 <head>
   <meta charset="UTF-8">
-  <title>白石学園ポータルサイト</title>
+  <title>図書館システム</title>
   <link rel="stylesheet" href="ReturnLent.css" type="text/css">
 </head>
 
@@ -72,8 +72,7 @@ $book = $dao->clickBook($_POST["book_id"]);
       $currentDate = date('Y-m-d');
       $oneWeekLater = date('Y年m月d日', strtotime('+1 week', strtotime($currentDate)));
       // 結果を表示
-      echo '<p style="margin-top: -50px; margin-left: -10px;">' . $oneWeekLater  . " まで
-    この本を借りますか？";
+      echo '<p style="margin-top: -50px; margin-left: -10px;">この本を返却しますか？';
       ?>
       <button id="yesButton" onclick="openComplete()">はい</button>
       <button id="noButton" onclick="closeDialog()">いいえ</button>
