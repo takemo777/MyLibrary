@@ -6,7 +6,7 @@ require_once("../../../Test_DB/Book.php");
 
 session_start();
 if (!isset($_SESSION["user_id"])) {
-  header("Location: login.php");
+  header("Location: ../../Login.php");
   exit;
 }
 
