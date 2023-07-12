@@ -82,7 +82,7 @@ $book = $dao->clickBook($_POST["book_id"]);
   </div>
   <div id="dialog2">
     <div class="dialog2-content">
-      <button id="complete" onclick="closeDialog2()">完了しました</button>
+      <button id="complete" onclick="redirectToHome()">完了しました</button>
     </div>
   </div>
 
