@@ -176,7 +176,7 @@ $lentBooks = $dao->getLentNowBooks($user);
                 // lentBooksの要素数分for文を回す
                 if (lentBooks[i].book_id === totalImages[imageIndex].book_id) {
                     // 貸し出しているのは自分か？
-                    if (totalImages[imageIndex].user_id === user_id) {
+                    if (parseInt(totalImages[imageIndex].user_id) === parseInt(user_id)) {
                         link = "../ReturnLent/ReturnLent.php";
                         break;
                     } else {
