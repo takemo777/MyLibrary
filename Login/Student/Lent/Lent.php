@@ -1,17 +1,21 @@
 <?php
-// DAO.php,USER.phpを読み込み
+// DAO.php,USER.php,Book.phpに保存されているPHPスクリプトを取り込む
 require_once("../../../Test_DB/db.php");
 require_once("../../../Test_DB/User.php");
 require_once("../../../Test_DB/Book.php");
 
 session_start();
+
+// user_idがNULLまたは空の時、ログインページに遷移させる
 if (!isset($_SESSION["user_id"])) {
   header("Location: ../../Login.php");
   exit;
 }
-
+// DAOクラスをインスタンス化
 $dao = new DAO();
+// 引数にセッション変数のuser_idを指定してDAOクラスのgetUserメソッドを実行しUserインスタンスを変数userに格納
 $user = $dao->getUser($_SESSION["user_id"]);
+//引数に本をクリックした際に送信されたbook_idを指定して、クリックした本の詳細を変数bookに格納
 $book = $dao->clickBook($_POST["book_id"]);
 
 ?>
@@ -27,6 +31,7 @@ $book = $dao->clickBook($_POST["book_id"]);
 <body>
   <div class="main">
     <!--ヘッダー-->
+    <!-- Header.phpを呼び出す -->
     <?php include "../../../Test_DB/Header.php"; ?>
   </div><br>
   <!--パンくずリスト-->
@@ -92,6 +97,7 @@ $book = $dao->clickBook($_POST["book_id"]);
 
       var dialog = document.getElementById("dialog2");
 
+      // phpからuser_idとbook_idを受け取る
       const user_id = <?php echo $user->getUserId(); ?>;
       const book_id = <?php echo $book["book_id"]; ?>;
 
@@ -103,7 +109,7 @@ $book = $dao->clickBook($_POST["book_id"]);
         data: {
           "user_id": user_id,
           "book_id": book_id,
-          "processing": "lent"
+          "processing": "lent" //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
         }
       });
       closeDialog();
