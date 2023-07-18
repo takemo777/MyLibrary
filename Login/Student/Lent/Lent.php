@@ -102,7 +102,6 @@ $book = $dao->clickBook($_POST["book_id"]);
       const book_id = <?php echo $book["book_id"]; ?>;
 
       // 非同期通信でAjax.phpにuser_idとbook_idを送信
-      // dataはJSON形式で送信
       $.ajax({
 
         type: 'post',
