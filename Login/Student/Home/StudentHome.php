@@ -195,8 +195,10 @@ $lentBooks = $dao->getLentNowBooks($user);
         }
 
         function openQrCodeWindow() {
+            //QRcode.htmlを別ウインドウで600×400の大きさで開く
             var qrCodeWindow = window.open('Qrcode.html', '_blank', 'width=600,height=400');
             qrCodeWindow.onbeforeunload = function() {
+                //QRコードから読み取った情報をint型に変換してGolink関数へ送る
                 var qrCodeResult = qrCodeWindow.document.getElementById('qr').value;
                 var qrCodeValue = parseInt(qrCodeResult);
                 Golink(allBooks, qrCodeValue);

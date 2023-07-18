@@ -60,10 +60,12 @@
     if(scanResult){
       //QRコードをスキャンした結果を出力
       qr.value=qr.value+scanResult.data+'\n';
-      //わざとエラーがでます
-      window.location.href = 'http://localhost/Library/login/Login '+ qr.value; 
+      //QRコードに書いてある情報をリンクに変換し、そのページへ飛ぶ
+      //window.location.href = 'http://localhost/Library/login/Login '+ qr.value;
+      //スキャン専用ページを消す 
       open('about:blank', '_self').close();
     }
+    //QRコードが読み込まれなかった場合0.2秒後にスキャンをもう一度行う
     setTimeout(Scan,200);
   }
 </script>
