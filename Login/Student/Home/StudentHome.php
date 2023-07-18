@@ -1,23 +1,28 @@
 <?php
 session_start();
-// DAO.php,USER.phpを読み込み
+// DAO.php,USER.php,Book.phpに保存されているPHPスクリプトを取り込む
 require_once("../../../Test_DB/db.php");
 require_once("../../../Test_DB/User.php");
 require_once("../../../Test_DB/Book.php");
+
+// user_idがNULLまたは空の時、ログインページに遷移させる
 if (!isset($_SESSION["user_id"])) {
     header("Location: login.php");
     exit;
 }
+// セッション変数からuser_idを取得し変数user_idに格納
 $user_id = $_SESSION["user_id"];
+// DAOクラスをインスタンス化
 $dao = new DAO();
+// 引数にuser_idを指定してDAOクラスのgetUserメソッドを実行しUserインスタンスを変数userに格納
 $user = $dao->getUser($user_id);
+// userのgetUserIdメソッドを実行し、取得したuser_idを文字列型に変換し,json_user_idに格納
 $json_user_id = json_encode($user->getUserId());
-// クラスの本を取得
-//echo $user->getAffiliationId();
+// 引数にuserを指定しdaoのgetAllBooksメソッドを実行し、ログインしているユーザーのクラスにある本を全て取得
 $allBooks = $dao->getAllBooks($user);
-// 自分が借りている本を取得
+// 引数にuserを指定しdaoのgetMyBooksメソッドを実行し、ログインしているユーザーが現在借りている本を全て取得
 $myBooks = $dao->getMyBooks($user);
-// 貸し出し中の本を取得
+// 引数にuserを指定しdaoのgetLentNowBooksメソッドを実行し、ログインしているユーザーのクラスで現在借りられている本を全て取得
 $lentBooks = $dao->getLentNowBooks($user);
 ?>
 <!DOCTYPE html>
@@ -39,7 +44,7 @@ $lentBooks = $dao->getLentNowBooks($user);
             <p class = "name"><?php echo $user->getUserTypeName() ?>・<?php echo $user->getAffiliationName() ?></p>
         </div>
     </div>-->
-
+    <!-- Header.phpを呼び出す -->
     <?php include "../../../Test_DB/Header.php"; ?><br><br>
 
 

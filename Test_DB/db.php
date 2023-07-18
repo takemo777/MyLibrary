@@ -6,7 +6,7 @@ require_once("Book.php");
 class DAO
 {
     private $user = "root";
-    private $pwd = "";
+    private $pwd = "pathSQL";
     private $dsn = "mysql:host=localhost;port=3306;dbname=library;";
     private $conn;
 
@@ -35,7 +35,7 @@ class DAO
         return $user;
     }
 
-    // ログインしているユーザーが借りている本の情報を取得するためのSQL文
+    // ログインしているユーザーが現在借りている本の情報を取得するためのSQL文
     public function getMyBooks(&$user)
     {
         $stmt = $this->conn->prepare("SELECT l.user_id, b.book_id, b.book_name, b.author, b.publisher, b.remarks, b.image, l.lending_status
@@ -153,7 +153,7 @@ class DAO
         $stmt->execute();
     }
 
-    // 履歴を取得する関数
+    // ログインしているユーザーの貸出履歴を取得する関数
     public function getHistory($user_id)
     {
         // 貸出履歴の取得

@@ -94,10 +94,13 @@ $book = $dao->clickBook($_POST["book_id"]);
     function openComplete() {
 
       var dialog = document.getElementById("dialog2");
+
       // phpからuser_idとbook_idを受け取る
       const user_id = <?php echo $user->getUserId(); ?>;
       const book_id = <?php echo $book["book_id"]; ?>;
+
       // 非同期通信でAjax.phpにuser_idとbook_idを送信
+      // dataはJSON形式で送信
       $.ajax({
 
         type: 'post',
@@ -105,7 +108,7 @@ $book = $dao->clickBook($_POST["book_id"]);
         data: {
           "user_id": user_id,
           "book_id": book_id,
-          "processing": "returnLent"
+          "processing": "returnLent" //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
         }
       });
       closeDialog();
