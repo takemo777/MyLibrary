@@ -172,4 +172,24 @@ class DAO
 
         return $result;
     }
+
+
+    //ISBNコードからbook_idを返す関数（実装中）
+    public function searchISBN($ISBN)
+        //ISBNコードから書籍検索し、該当書籍のbook_idを返す
+        {
+        $sql = "SELECT book_id
+                FROM book
+                WHERE ISBN = :ISBN";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(":ISBN", $ISBN);
+        $stmt->execute();
+
+        $result = ['book_id'];
+
+        return $result;
+        }
+        
+        
 }

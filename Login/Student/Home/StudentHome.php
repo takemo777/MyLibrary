@@ -7,7 +7,7 @@ require_once("../../../Test_DB/Book.php");
 
 // user_idがNULLまたは空の時、ログインページに遷移させる
 if (!isset($_SESSION["user_id"])) {
-    header("Location: login.php");
+    header("Location: ../../login.php");
     exit;
 }
 // セッション変数からuser_idを取得し変数user_idに格納
@@ -24,6 +24,9 @@ $allBooks = $dao->getAllBooks($user);
 $myBooks = $dao->getMyBooks($user);
 // 引数にuserを指定しdaoのgetLentNowBooksメソッドを実行し、ログインしているユーザーのクラスで現在借りられている本を全て取得
 $lentBooks = $dao->getLentNowBooks($user);
+
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -71,6 +74,7 @@ $lentBooks = $dao->getLentNowBooks($user);
     <hr class="custom-hr"><!--横線-->
     <p class="showbook2">全ての本</p>
     <div class="all-image-container"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
         //文字を改行する関数
         function insertLineBreaks(text, maxLength) {
@@ -209,6 +213,38 @@ $lentBooks = $dao->getLentNowBooks($user);
                 Golink(allBooks, qrCodeValue);
             };
         }
+/*
+        //バーコードを読み込む関数（実装中）
+        function openBarCodeWindow() {
+            //Barcode.htmlを別ウインドウで600×400の大きさで開く
+            var BarCodeWindow = window.open('Barcode.html', '_blank', 'width=600,height=400');
+            BarCodeWindow.onbeforeunload = function() {
+                //バーコードから読み取った情報をint型に変換してsearchISBN経由でGolink関数へ送る
+                var BarCodeResult = BarCodeWindow.document.getElementById('jan').value;
+                var BarCodeValue = parseInt(BarCodeResult);
+                const ISBN = <?php echo $book["book_id"]; ?>;
+
+                $.ajax({
+
+                type: 'post',
+                url: "../../../Test_DB/Ajax2.php",
+                data: {
+                "ISBN": ISBN,
+                "processing": "ISBN" //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
+                },
+
+                success: function(responce){
+                    bookid = responce;
+                }
+
+                });
+                
+                bookid = parseInt(bookid - 1);
+                alert(bookid);
+                Golink(allBooks, bookid);
+                
+            };
+        }*/
     </script>
 </body>
 
