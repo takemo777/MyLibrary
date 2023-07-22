@@ -93,6 +93,7 @@ $book = $dao->clickBook($_POST["book_id"]);
       var dialog = document.getElementById("dialog2");
 
       // phpからuser_idとbook_idを受け取る
+      const user_id = <?php echo $user->getUserId(); ?>;
       const book_id = <?php echo $book["book_id"]; ?>;
 
       // 非同期通信でAjax.phpにuser_idとbook_idを送信

@@ -63,8 +63,8 @@ $book = $dao->clickBook($_POST["book_id"]);
     <button id="deleteButton" onclick="deleteDialog()">削除</button>
     <button id="returnButton" onclick="redirectToHome()">戻る</button>
   </div>
-  <!--ダイアログボックスの表示-->
-  <div id="dialog" class="dialog">
+<!--ダイアログボックスの表示-->
+<div id="dialog" class="dialog">
     <div class="dialog-content">
       <!--現在の日付から一週間後の日付の表氏-->
       <?php
@@ -77,7 +77,7 @@ $book = $dao->clickBook($_POST["book_id"]);
   </div>
   <div id="dialog2">
     <div class="dialog2-content">
-      <button id="completeButton" onclick="closeDialog2()">削除しました</button>
+      <button id="completeButton" onclick="closeDialog2()">完了しました</button>
     </div>
   </div>
 
@@ -94,9 +94,9 @@ $book = $dao->clickBook($_POST["book_id"]);
     function openComplete() {
 
         //book_idを取ってくるやつ
-        const book_id = <?php echo $book["book_id"]; ?>;
         const user_id = <?php echo $user->getUserId(); ?>;
-
+        const book_id = <?php echo $book["book_id"]; ?>;
+        
       // 非同期通信でAjax.phpにuser_idとbook_idを送信
       $.ajax({
 
@@ -105,7 +105,7 @@ $book = $dao->clickBook($_POST["book_id"]);
         data: {
           "processing": "delete", //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
           "book_id": book_id,
-          "user_id": user_id
+          "user_id": user_id,
           
         }
       });

@@ -208,6 +208,10 @@ class DAO
         $stmt->bindValue(":book_id", $book_id);
         $stmt->execute();
 
+        $result = 0;
+
+        return $result;
+
     }
         
 }
