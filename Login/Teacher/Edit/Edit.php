@@ -36,7 +36,7 @@ $book = $dao->clickBook($_POST["book_id"]);
   </div><br>
   <!--パンくずリスト-->
   <ul class="breadcrumb">
-    <li class="pan"><a href="../Home/StudentHome.php">ホーム > 詳細ページ</a></li>
+    <li class="pan"><a href="../Home/TeacherHome.php">ホーム > 詳細ページ</a></li>
   </ul>
   <div class="books"> <!--本の詳細-->
     <img src="<?php echo '../../../image/' . $book["image"]; ?>" + class="example1" style="vertical-align:top">
@@ -54,13 +54,13 @@ $book = $dao->clickBook($_POST["book_id"]);
       <h2>貸出状況： <?php echo $book["lending_status"]; ?></h2>
       </p>
       <p>
-      <h2>返却予定日： <?php echo $book["return_due_date"]; ?></h2>
+      <h2>ISBN： <?php echo $book["ISBN"]; ?></h2>
       </p>
     </div>
   </div> <!--貸出、戻るボタン-->
   <div class="buttonContainer">
-    <button id="deleteButton" onclick="deleteDialog()">削除</button>
     <button id="editButton" onclick="editDialog()">編集</button>
+    <button id="deleteButton" onclick="deleteDialog()">削除</button>
     <button id="returnButton" onclick="redirectToHome()">戻る</button>
   </div>
   <!--ダイアログボックスの表示-->
@@ -68,11 +68,8 @@ $book = $dao->clickBook($_POST["book_id"]);
     <div class="dialog-content">
       <!--現在の日付から一週間後の日付の表氏-->
       <?php
-      $currentDate = date('Y-m-d');
-      $oneWeekLater = date('Y年m月d日', strtotime('+1 week', strtotime($currentDate)));
       // 結果を表示
-      echo '<p style="margin-top: -50px; margin-left: -10px;">' . $oneWeekLater  . " まで
-    この本を借りますか？";
+      echo '<p style="margin-top: -50px; margin-left: -10px;"> この本を削除しますか？';
       ?>
       <button id="yesButton" onclick=openComplete()>はい</button>
       <button id="noButton" onclick="closeDialog()">いいえ</button>
@@ -80,7 +77,7 @@ $book = $dao->clickBook($_POST["book_id"]);
   </div>
   <div id="dialog2">
     <div class="dialog2-content">
-      <button id="completeButton" onclick="closeDialog2()">完了しました</button>
+      <button id="completeButton" onclick="closeDialog2()">削除しました</button>
     </div>
   </div>
 
@@ -88,7 +85,7 @@ $book = $dao->clickBook($_POST["book_id"]);
 
   <script>
     //はいいいえダイアログ
-    function openDialog() {
+    function deleteDialog() {
       var dialog = document.getElementById("dialog");
       console.log(dialog);
       dialog.style.display = "block";
@@ -96,21 +93,20 @@ $book = $dao->clickBook($_POST["book_id"]);
     //完了ダイアログ
     function openComplete() {
 
-      var dialog = document.getElementById("dialog2");
-
-      // phpからuser_idとbook_idを受け取る
-      const user_id = <?php echo $user->getUserId(); ?>;
-      const book_id = <?php echo $book["book_id"]; ?>;
+        //book_idを取ってくるやつ
+        const book_id = <?php echo $book["book_id"]; ?>;
+        const user_id = <?php echo $user->getUserId(); ?>;
 
       // 非同期通信でAjax.phpにuser_idとbook_idを送信
       $.ajax({
 
         type: 'post',
-        url: "../../../Test_DB/Ajax.php",
+        url: "../../../Test_DB/Ajax2.php",
         data: {
-          "user_id": user_id,
+          "processing": "delete", //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
           "book_id": book_id,
-          "processing": "lent" //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
+          "user_id": user_id
+          
         }
       });
       closeDialog();
@@ -124,12 +120,12 @@ $book = $dao->clickBook($_POST["book_id"]);
 
     function closeDialog2() {
       // 別のページにリダイレクト（移動）
-      window.location.href = "../Home/StudentHome.php";
+      window.location.href = "../Home/TeacherHome.php";
     }
     //ホームに戻る
     function redirectToHome() {
       // 別のページにリダイレクト（移動）
-      window.location.href = "../Home/StudentHome.php";
+      window.location.href = "../Home/TeacherHome.php";
     }
   </script>
 </body>

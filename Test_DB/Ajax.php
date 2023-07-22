@@ -20,6 +20,8 @@ if (strcmp($process, "lent") == 0) {
 } else if (strcmp($process, "returnLent") == 0) {
     // 返却処理を実行
     echo $dao->returnProcess($user_id, $book_id);
+} else if (strcmp($process, "delete")==0){
+    echo $dao->deleteProcess($user_id, $book_id);
 }
 
 // このファイルの処理を終了する
