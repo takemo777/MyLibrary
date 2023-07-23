@@ -105,11 +105,12 @@ $book = $dao->clickBook($_POST["book_id"]);
       $.ajax({
 
         type: 'post',
-        url: "../../../Test_DB/Ajax.php",
+        url: "../../../Test_DB/Ajax2.php",
         data: {
+          "processing": "lent",
           "user_id": user_id,
           "book_id": book_id,
-          "processing": "lent" //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
+           //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
         }
       });
       closeDialog();

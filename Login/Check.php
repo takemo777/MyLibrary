@@ -29,7 +29,7 @@ if ($answer !== null && $answer == $password) {
     header("Location: Student/Home/StudentHome.php"); //学生用のホーム画面に遷移
     exit;
   } elseif ($user_type_id == 2) {
-    header("Location: Teacher/Home.php"); //教員用のホーム画面に遷移
+    header("Location: Teacher/Home/TeacherHome.php"); //教員用のホーム画面に遷移
     exit;
   } else {
     echo "ユーザ種別が無効です。";

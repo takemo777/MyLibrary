@@ -7,7 +7,7 @@ require_once("../../../Test_DB/Book.php");
 
 // user_idがNULLまたは空の時、ログインページに遷移させる
 if (!isset($_SESSION["user_id"])) {
-    header("Location: login.php");
+    header("Location: ../../login.php");
     exit;
 }
 // セッション変数からuser_idを取得し変数user_idに格納
@@ -24,6 +24,9 @@ $allBooks = $dao->getAllBooks($user);
 $myBooks = $dao->getMyBooks($user);
 // 引数にuserを指定しdaoのgetLentNowBooksメソッドを実行し、ログインしているユーザーのクラスで現在借りられている本を全て取得
 $lentBooks = $dao->getLentNowBooks($user);
+
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -58,7 +61,7 @@ $lentBooks = $dao->getLentNowBooks($user);
         <li class="pan"><a href="../Home/StudentHome.php">ホーム</a></li>
         <div class="relative">
             <img src="HomeImage/QRtext.png" class="big">
-            <img src="HomeImage/QRsample.png" class="small" alt="QRコード" onclick="openQrCodeWindow()">
+            <img src="HomeImage/QRsample.png" class="small" alt="QRコード" onclick="openBarCodeWindow()">
         </div>
     </ul>
     <br>
@@ -71,6 +74,7 @@ $lentBooks = $dao->getLentNowBooks($user);
     <hr class="custom-hr"><!--横線-->
     <p class="showbook2">全ての本</p>
     <div class="all-image-container"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
         //文字を改行する関数
         function insertLineBreaks(text, maxLength) {
@@ -207,6 +211,38 @@ $lentBooks = $dao->getLentNowBooks($user);
                 var qrCodeResult = qrCodeWindow.document.getElementById('qr').value;
                 var qrCodeValue = parseInt(qrCodeResult);
                 Golink(allBooks, qrCodeValue);
+            };
+        }
+
+        //バーコードを読み込む関数（実装中）
+        function openBarCodeWindow() {
+            //Barcode.htmlを別ウインドウで600×400の大きさで開く
+            var BarCodeWindow = window.open('Barcode.html', '_blank', 'width=600,height=400');
+            BarCodeWindow.onbeforeunload = function() {
+                //バーコードから読み取った情報をint型に変換してsearchISBN経由でGolink関数へ送る
+                var BarCodeResult = BarCodeWindow.document.getElementById('jan').value;
+                var BarCodeValue = parseInt(BarCodeResult);
+                alert(BarCodeResult);
+                
+                const ISBN = BarCodeValue;
+
+                return $.ajax({
+
+                    type: 'POST',
+                    url: "../../../Test_DB/Ajax2.php",
+                    data: {
+                    "processing": "ISBN",
+                    "ISBN": ISBN,
+                    async:false //同期処理（処理がそこまで重くないプログラムのため）
+                    }
+                }).done(function(result){
+                    alert(result)
+                    book_id = (result - 1 );
+                    alert(book_id);
+                    Golink(allBooks, book_id);
+                }).fail(function(result){
+                    alert("お探しの本は見つかりませんでした")
+                })
             };
         }
     </script>

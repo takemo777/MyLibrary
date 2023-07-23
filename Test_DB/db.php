@@ -93,7 +93,7 @@ class DAO
     // 選択した本の情報を取得
     public function clickBook($book_id): array
     {
-        $sql = "SELECT l.user_id, b.book_id, b.book_name, b.author, b.publisher, b.remarks, b.image, COALESCE(l.return_due_date, '- - -') AS return_due_date, COALESCE(l.lending_status, '貸出可能') AS lending_status
+        $sql = "SELECT l.user_id, b.book_id, b.book_name, b.author, b.publisher, b.remarks, b.image, b.ISBN, COALESCE(l.return_due_date, '- - -') AS return_due_date, COALESCE(l.lending_status, '貸出可能') AS lending_status
                 FROM book as b
                 LEFT JOIN lent2 as l
                 ON b.book_id = l.book_id
@@ -172,4 +172,42 @@ class DAO
 
         return $result;
     }
+
+
+    //ISBNコードからbook_idを返す関数（実装中）
+    public function searchISBN($ISBN)
+        //ISBNコードから書籍検索し、該当書籍のbook_idを返す
+        {
+        $sql = "SELECT book_id
+                FROM book
+                WHERE ISBN = :ISBN";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(":ISBN", $ISBN);
+        $stmt->execute();
+        
+        $result = $stmt->fetch(PDO::FETCH_BOTH);
+
+        return $result;
+        }
+        
+
+        public function deleteProcess($book_id)
+    {   
+        // lentテーブルから同じbook_idのものを削除（参照制約の関係）
+        $sql = "DELETE FROM lent WHERE book_id = :book_id";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(":book_id", $book_id);
+        $stmt->execute();
+        
+        // bookテーブルから同じbook_idのものを削除
+        $sql = "DELETE FROM book WHERE book_id = :book_id";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(":book_id", $book_id);
+        $stmt->execute();
+
+    }
+        
 }

@@ -65,16 +65,11 @@ $book = $dao->clickBook($_POST["book_id"]);
     <div class="dialog-content">
       <!--現在の日付から一週間後の日付の表氏-->
       <?php
-      $currentDate = date('Y-m-d');
-      $oneWeekLater = date('Y年m月d日', strtotime('+1 week', strtotime($currentDate)));
       // 結果を表示
-      echo '<p style="margin-top: -50px; margin-left: -10px;">' . $oneWeekLater  . " まで
-    この本を返しますか？";
+      echo '<p style="margin-top: -50px; margin-left: -10px;"> この本を返しますか？';
       ?>
-      <button id="yesButton" onclick="openComplete()">はい</button>
+      <button id="yesButton" onclick=openComplete()>はい</button>
       <button id="noButton" onclick="closeDialog()">いいえ</button>
-      <script>
-      </script>
     </div>
   </div>
   <div id="dialog2">
@@ -105,11 +100,12 @@ $book = $dao->clickBook($_POST["book_id"]);
       $.ajax({
 
         type: 'post',
-        url: "../../../Test_DB/Ajax.php",
+        url: "../../../Test_DB/Ajax2.php",
         data: {
+          "processing": "returnLent",
           "user_id": user_id,
           "book_id": book_id,
-          "processing": "returnLent" //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
+           //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
         }
       });
       closeDialog();
