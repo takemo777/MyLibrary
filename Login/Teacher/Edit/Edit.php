@@ -92,9 +92,11 @@ $book = $dao->clickBook($_POST["book_id"]);
     }
     //完了ダイアログ
     function openComplete() {
+      
+      //ポップアップ「完了しました」を出す
+      var dialog = document.getElementById("dialog2");
 
-        //book_idを取ってくるやつ
-        const user_id = <?php echo $user->getUserId(); ?>;
+        //book_idを取ってくる
         const book_id = <?php echo $book["book_id"]; ?>;
         
       // 非同期通信でAjax.phpにuser_idとbook_idを送信
@@ -104,8 +106,7 @@ $book = $dao->clickBook($_POST["book_id"]);
         url: "../../../Test_DB/Ajax2.php",
         data: {
           "processing": "delete", //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
-          "book_id": book_id,
-          "user_id": user_id,
+          "book_id": book_id
           
         }
       });

@@ -61,7 +61,7 @@ $lentBooks = $dao->getLentNowBooks($user);
         <li class="pan"><a href="../Home/StudentHome.php">ホーム</a></li>
         <div class="relative">
             <img src="HomeImage/QRtext.png" class="big">
-            <img src="HomeImage/QRsample.png" class="small" alt="QRコード" onclick="openQrCodeWindow()">
+            <img src="HomeImage/QRsample.png" class="small" alt="QRコード" onclick="openBarCodeWindow()">
         </div>
     </ul>
     <br>
@@ -213,7 +213,7 @@ $lentBooks = $dao->getLentNowBooks($user);
                 Golink(allBooks, qrCodeValue);
             };
         }
-/*
+
         //バーコードを読み込む関数（実装中）
         function openBarCodeWindow() {
             //Barcode.htmlを別ウインドウで600×400の大きさで開く
@@ -222,29 +222,29 @@ $lentBooks = $dao->getLentNowBooks($user);
                 //バーコードから読み取った情報をint型に変換してsearchISBN経由でGolink関数へ送る
                 var BarCodeResult = BarCodeWindow.document.getElementById('jan').value;
                 var BarCodeValue = parseInt(BarCodeResult);
-                const ISBN = <?php echo $book["book_id"]; ?>;
-
-                $.ajax({
-
-                type: 'post',
-                url: "../../../Test_DB/Ajax2.php",
-                data: {
-                "ISBN": ISBN,
-                "processing": "ISBN" //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
-                },
-
-                success: function(responce){
-                    bookid = responce;
-                }
-
-                });
+                alert(BarCodeResult);
                 
-                bookid = parseInt(bookid - 1);
-                alert(bookid);
-                Golink(allBooks, bookid);
-                
+                const ISBN = BarCodeValue;
+
+                return $.ajax({
+
+                    type: 'POST',
+                    url: "../../../Test_DB/Ajax2.php",
+                    data: {
+                    "processing": "ISBN",
+                    "ISBN": ISBN,
+                    async:false //同期処理（処理がそこまで重くないプログラムのため）
+                    }
+                }).done(function(result){
+                    alert(result)
+                    book_id = (result - 1 );
+                    alert(book_id);
+                    Golink(allBooks, book_id);
+                }).fail(function(result){
+                    alert("お探しの本は見つかりませんでした")
+                })
             };
-        }*/
+        }
     </script>
 </body>
 

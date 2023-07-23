@@ -173,7 +173,7 @@ class DAO
         return $result;
     }
 
-/*
+
     //ISBNコードからbook_idを返す関数（実装中）
     public function searchISBN($ISBN)
         //ISBNコードから書籍検索し、該当書籍のbook_idを返す
@@ -185,16 +185,16 @@ class DAO
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":ISBN", $ISBN);
         $stmt->execute();
-
-        $result = ['book_id'];
+        
+        $result = $stmt->fetch(PDO::FETCH_BOTH);
 
         return $result;
         }
-        */
+        
 
         public function deleteProcess($book_id)
-    {   echo "aaa";
-        // lentテーブルから同じbook_idのものを削除（参照の関係）
+    {   
+        // lentテーブルから同じbook_idのものを削除（参照制約の関係）
         $sql = "DELETE FROM lent WHERE book_id = :book_id";
 
         $stmt = $this->conn->prepare($sql);
@@ -207,10 +207,6 @@ class DAO
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":book_id", $book_id);
         $stmt->execute();
-
-        $result = 0;
-
-        return $result;
 
     }
         
