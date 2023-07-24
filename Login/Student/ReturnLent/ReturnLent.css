@@ -196,7 +196,7 @@
     border-radius: 10px; /* ボタンの角を丸める */
     cursor: pointer; /* マウスカーソルをポインターにする */
     margin-top: 45px; /* 上部の余白 */
-    margin-left: -300px; /* 右側の余白 */
+    margin-left: -250px; /* 右側の余白 */
     font-size: 22px; /* テキストの大きさを変更する */
   }
   
@@ -212,7 +212,7 @@
     border-radius: 10px; /* ボタンの角を丸める */
     cursor: pointer; /* マウスカーソルをポインターにする */
     margin-top: 45px; /* 上部の余白 */
-    margin-right: 10px; /* 右側の余白 */
+    margin-left: -60px; /* 右側の余白 */
     font-size: 22px; /* テキストの大きさを変更する */
   }
   
