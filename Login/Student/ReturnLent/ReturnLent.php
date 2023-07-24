@@ -100,7 +100,7 @@ $book = $dao->clickBook($_POST["book_id"]);
       $.ajax({
 
         type: 'post',
-        url: "../../../Test_DB/Ajax2.php",
+        url: "../../../Test_DB/Ajax.php",
         data: {
           "processing": "returnLent",
           "user_id": user_id,

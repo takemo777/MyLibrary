@@ -103,7 +103,7 @@ $book = $dao->clickBook($_POST["book_id"]);
       $.ajax({
 
         type: 'post',
-        url: "../../../Test_DB/Ajax2.php",
+        url: "../../../Test_DB/Ajax.php",
         data: {
           "processing": "delete", //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
           "book_id": book_id
@@ -112,6 +112,11 @@ $book = $dao->clickBook($_POST["book_id"]);
       });
       closeDialog();
       dialog.style.display = "block";
+    }
+
+    function editDialog(){
+      //別ページにリダイレクト
+      window.location.href = "Change.php"
     }
 
     function closeDialog() {

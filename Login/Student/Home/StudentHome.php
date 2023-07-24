@@ -229,16 +229,14 @@ $lentBooks = $dao->getLentNowBooks($user);
                 return $.ajax({
 
                     type: 'POST',
-                    url: "../../../Test_DB/Ajax2.php",
+                    url: "../../../Test_DB/Ajax.php",
                     data: {
                     "processing": "ISBN",
-                    "ISBN": ISBN,
-                    async:false //同期処理（処理がそこまで重くないプログラムのため）
+                    "ISBN": ISBN
+                    //async:false //同期処理（処理がそこまで重くないプログラムのため）
                     }
                 }).done(function(result){
-                    alert(result)
                     book_id = (result - 1 );
-                    alert(book_id);
                     Golink(allBooks, book_id);
                 }).fail(function(result){
                     alert("お探しの本は見つかりませんでした")
