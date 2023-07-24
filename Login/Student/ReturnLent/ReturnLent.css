@@ -155,8 +155,8 @@
 
   #completeButton /*okボタン*/{
     position: absolute;
-    top: 230px; /* 上からの位置 */
-    left: 600px; /* 左からの位置 */
+    top: dialog; /* 上からの位置 */
+    left: dialog; /* 左からの位置 */
     width: 150px; /* ボタンの幅 */
     height: 55px; /* ボタンの高さ */
     background-color: greenyellow; /* ボタンの背景色 */
@@ -164,8 +164,8 @@
     border: none; /* ボタンのボーダーをなしにする */
     border-radius: 10px; /* ボタンの角を丸める */
     cursor: pointer; /* マウスカーソルをポインターにする */
-    margin-top: 20px; /* 上部の余白 */
-    margin-right: 10px; /* 右側の余白 */
+    margin-top: -25px; /* 上部の余白 */
+    margin-left: -70px; /* 右側の余白 */
     font-size: 22px; /* テキストの大きさを変更する */
   }
   .dialog2-content {
@@ -186,8 +186,8 @@
   
   #yesButton /*はいボタン*/{
     position: absolute;
-    top: 270px; /* 上からの位置 */
-    left: 500px; /* 左からの位置 */
+    top: dialog; /* 上からの位置 */
+    left: dialog; /* 左からの位置 */
     width: 150px; /* ボタンの幅 */
     height: 55px; /* ボタンの高さ */
     background-color: greenyellow; /* ボタンの背景色 */
@@ -195,15 +195,15 @@
     border: none; /* ボタンのボーダーをなしにする */
     border-radius: 10px; /* ボタンの角を丸める */
     cursor: pointer; /* マウスカーソルをポインターにする */
-    margin-top: 20px; /* 上部の余白 */
-    margin-right: 10px; /* 右側の余白 */
+    margin-top: 45px; /* 上部の余白 */
+    margin-left: -250px; /* 右側の余白 */
     font-size: 22px; /* テキストの大きさを変更する */
   }
   
   #noButton /*いいえボタン*/{
     position: absolute;
-    top: 270px; /* 上からの位置 */
-    left: 700px; /* 左からの位置 */
+    top: dialog; /* 上からの位置 */
+    left: dialog; /* 左からの位置 */
     width: 150px; /* ボタンの幅 */
     height: 55px; /* ボタンの高さ */
     background-color: Red; /* ボタンの背景色 */
@@ -211,11 +211,10 @@
     border: none; /* ボタンのボーダーをなしにする */
     border-radius: 10px; /* ボタンの角を丸める */
     cursor: pointer; /* マウスカーソルをポインターにする */
-    margin-top: 20px; /* 上部の余白 */
-    margin-right: 10px; /* 右側の余白 */
+    margin-top: 45px; /* 上部の余白 */
+    margin-left: -60px; /* 右側の余白 */
     font-size: 22px; /* テキストの大きさを変更する */
   }
-
   
 
   

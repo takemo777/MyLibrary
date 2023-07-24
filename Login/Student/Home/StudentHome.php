@@ -222,7 +222,6 @@ $lentBooks = $dao->getLentNowBooks($user);
                 //バーコードから読み取った情報をint型に変換してsearchISBN経由でGolink関数へ送る
                 var BarCodeResult = BarCodeWindow.document.getElementById('jan').value;
                 var BarCodeValue = parseInt(BarCodeResult);
-                alert(BarCodeResult);
                 
                 const ISBN = BarCodeValue;
 
@@ -238,6 +237,7 @@ $lentBooks = $dao->getLentNowBooks($user);
                 }).done(function(result){
                     book_id = (result - 1 );
                     Golink(allBooks, book_id);
+                    
                 }).fail(function(result){
                     alert("お探しの本は見つかりませんでした")
                 })

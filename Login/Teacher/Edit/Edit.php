@@ -69,7 +69,7 @@ $book = $dao->clickBook($_POST["book_id"]);
       <!--現在の日付から一週間後の日付の表氏-->
       <?php
       // 結果を表示
-      echo '<p style="margin-top: -50px; margin-left: -10px;"> この本を削除しますか？';
+      echo '<p style="margin-top: -50px; margin-left: -10px;white-space: nowrap;"> この本を削除しますか？';
       ?>
       <button id="yesButton" onclick=openComplete()>はい</button>
       <button id="noButton" onclick="closeDialog()">いいえ</button>
