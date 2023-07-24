@@ -1,20 +1,37 @@
+<?php
+$userType = $user->getUserTypeName();
+
+//デフォルトのリンク
+$link = "../Home/StudentHome.php";
+
+// ユーザータイプがteacherの時リンクを変更
+if ($userType === 'teacher') {
+    $link = "../Home/TeacherHome.php";
+}
+?>
 <header>
     <button id="logout-button" class="logout-button" onclick="window.location.href='../../Logout.php'">ログアウト</button>
     <div class="header-wrapper">
         <h1>
-            <a href="../Home/StudentHome.php">図書館システム</a>
+            <a href="<?php echo $link; ?>">図書館システム</a>
         </h1>
         <nav class="pc-nav">
             <!--<p class="name">
             <?php echo $user->getUserName() ?>
         </p>
         <p class="kind">
-            <?php echo $user->getUserTypeName() ?>・
+            <?php echo $userType; ?>
             <?php echo $user->getAffiliationName() ?>
         </p>-->
-            <li>ログイン者：<?php echo $user->getUserName() ?></li>
-            <li>区分：<?php echo $user->getUserTypeName() ?></li>
-            <li>学科：<?php echo $user->getAffiliationName() ?></li>
+            <li>ログイン者：
+                <?php echo $user->getUserName() ?>
+            </li>
+            <li>区分：
+                <?php echo $userType; ?>
+            </li>
+            <li>学科：
+                <?php echo $user->getAffiliationName() ?>
+            </li>
         </nav>
     </div>
 </header>
