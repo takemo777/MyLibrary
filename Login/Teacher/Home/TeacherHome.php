@@ -50,6 +50,8 @@ $lentBooks = $dao->getLentNowBooks($user);
     <!-- Header.phpを呼び出す -->
     <?php include "../../../Test_DB/Header.php"; ?><br><br>
 
+    <button onclick="openGraph()">今月の貸出冊数の予測を見る</button>
+
 
     <!--検索欄と検索ボタン-->
     <div class="search">
@@ -213,33 +215,51 @@ $lentBooks = $dao->getLentNowBooks($user);
                 Golink(allBooks, qrCodeValue);
             };
         }
-/*
-        //バーコードを読み込む関数（実装中）
-        function openBarCodeWindow() {
-            //Barcode.htmlを別ウインドウで600×400の大きさで開く
-            var BarCodeWindow = window.open('Barcode.html', '_blank', 'width=600,height=400');
-            BarCodeWindow.onbeforeunload = function() {
-                //バーコードから読み取った情報をint型に変換してsearchISBN経由でGolink関数へ送る
-                var BarCodeResult = BarCodeWindow.document.getElementById('jan').value;
-                var BarCodeValue = parseInt(BarCodeResult);
-                const ISBN = <?php echo $book["ISBN"]; ?>;
+        /*
+                //バーコードを読み込む関数（実装中）
+                function openBarCodeWindow() {
+                    //Barcode.htmlを別ウインドウで600×400の大きさで開く
+                    var BarCodeWindow = window.open('Barcode.html', '_blank', 'width=600,height=400');
+                    BarCodeWindow.onbeforeunload = function() {
+                        //バーコードから読み取った情報をint型に変換してsearchISBN経由でGolink関数へ送る
+                        var BarCodeResult = BarCodeWindow.document.getElementById('jan').value;
+                        var BarCodeValue = parseInt(BarCodeResult);
+                        const ISBN = <?php echo $book["ISBN"]; ?>;
 
 
-                // 非同期通信でAjax.phpにuser_idとbook_idを送信
-                 $.ajax({
+                        // 非同期通信でAjax.phpにuser_idとbook_idを送信
+                         $.ajax({
 
+                        type: 'post',
+                        url: "../../../Test_DB/Ajax2.php",
+                        data: {
+                         "processing": "ISBN",
+                         "ISBN": ISBN,
+                        //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
+                        }
+                    });
+                        closeDialog();
+                        dialog.style.display = "block";
+                     }
+                }*/
+
+
+        // AjaxでAjax.phpにグラフ表示を促す関数。非同期で行う
+        const openGraph = async () => {
+
+            // affiliation_idをjavascriptで使用するためにjson化
+            const affiliation_id = <?php echo $user->getAffiliationId(); ?>;
+
+            await $.ajax({
                 type: 'post',
-                url: "../../../Test_DB/Ajax2.php",
+                url: '../../../Test_DB/Ajax.php',
                 data: {
-                 "processing": "ISBN",
-                 "ISBN": ISBN,
-                //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
+                    'affiliation_id': affiliation_id,
+                    'processing': 'openGraph'
                 }
-            });
-                closeDialog();
-                dialog.style.display = "block";
-             }
-        }*/
+            })
+
+        }
     </script>
 </body>
 
