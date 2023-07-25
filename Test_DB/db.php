@@ -176,8 +176,18 @@ class DAO
 
     //ISBNコードからbook_idを返す関数（実装中）
     public function searchISBN($ISBN)
-        //ISBNコードから書籍検索し、該当書籍のbook_idを返す
+        //book_idの若い順に並べる（SQL8.0のみ有効）
         {
+        $sql = "SELECT *, 
+                ROW_NUMBER() OVER(ORDER BY book_id ASC) 
+                AS ROW_NUMBER_OVER 
+                FROM book
+                WHERE ISBN = :ISBN";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+
+        //ISBNからROW_NUMBER_OVERを取ってくる
         $sql = "SELECT *
                 FROM book
                 WHERE ISBN = :ISBN";
@@ -188,7 +198,9 @@ class DAO
         
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $result = $result['book_id'];
+        $result = $result['ROW_NUMBER_OVER'];
+
+       
 
         return $result;
         }

@@ -43,7 +43,7 @@ switch($process){
         $ISBN = filter_input(INPUT_POST, 'ISBN');
         // DAOクラスをインスタンス化
         $dao = new DAO();
-        //ISBNからbook_idを取り出す処理を実行
+        //ISBNからimageを取り出す処理を実行
         echo $dao->searchISBN($ISBN);
         break;
         
