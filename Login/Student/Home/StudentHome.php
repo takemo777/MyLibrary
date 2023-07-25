@@ -239,6 +239,7 @@ $lentBooks = $dao->getLentNowBooks($user);
                     Golink(allBooks, book_id);
 
                 }).fail(function(result) {
+                    
                     alert("お探しの本は見つかりませんでした")
                 })
             };

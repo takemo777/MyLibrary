@@ -70,7 +70,7 @@ $book = $dao->clickBook($_POST["book_id"]);
       $currentDate = date('Y-m-d');
       $oneWeekLater = date('Y年m月d日', strtotime('+1 week', strtotime($currentDate)));
       // 結果を表示
-      echo '<p style="margin-top: -50px; margin-left: -10px;">' . $oneWeekLater  . " まで
+      echo '<p style="margin-top: -50px; margin-left: -10px;white-space: nowrap;">' . $oneWeekLater  . " まで
     この本を借りますか？";
       ?>
       <button id="yesButton" onclick=openComplete()>はい</button>
