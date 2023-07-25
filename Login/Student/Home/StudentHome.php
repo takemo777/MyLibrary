@@ -222,7 +222,7 @@ $lentBooks = $dao->getLentNowBooks($user);
                 //バーコードから読み取った情報をint型に変換してsearchISBN経由でGolink関数へ送る
                 var BarCodeResult = BarCodeWindow.document.getElementById('jan').value;
                 var BarCodeValue = parseInt(BarCodeResult);
-                
+
                 const ISBN = BarCodeValue;
 
                 return $.ajax({
@@ -230,15 +230,16 @@ $lentBooks = $dao->getLentNowBooks($user);
                     type: 'POST',
                     url: "../../../Test_DB/Ajax.php",
                     data: {
-                    "processing": "ISBN",
-                    "ISBN": ISBN
-                    //async:false //同期処理（処理がそこまで重くないプログラムのため）
+                        "processing": "ISBN",
+                        "ISBN": ISBN
+                        //async:false //同期処理（処理がそこまで重くないプログラムのため）
                     }
-                }).done(function(result){
-                    book_id = (result - 1 );
+                }).done(function(result) {
+                    book_id = (result - 1);
                     Golink(allBooks, book_id);
+
+                }).fail(function(result) {
                     
-                }).fail(function(result){
                     alert("お探しの本は見つかりませんでした")
                 })
             };
