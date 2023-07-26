@@ -178,17 +178,10 @@ class DAO
     public function searchISBN($ISBN)
         //book_idの若い順に並べる（SQL8.0のみ有効）
     {
-        $sql = "SELECT *, 
-                ROW_NUMBER() OVER(ORDER BY book_id ASC) 
-                AS ROW_NUMBER_OVER 
-                FROM book";
-
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
 
         //ISBNからROW_NUMBER_OVERを取ってくる
         $sql = "SELECT *
-                FROM book
+                FROM book2
                 WHERE ISBN = :ISBN";
 
         $stmt = $this->conn->prepare($sql);
@@ -197,7 +190,7 @@ class DAO
         
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $result = $result['ROW_NUMBER_OVER'];
+        $result = $result['num'];
 
        
 
