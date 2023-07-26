@@ -177,7 +177,7 @@ class DAO
     //ISBNコードからbook_idを返す関数（実装中）
     public function searchISBN($ISBN)
         //book_idの若い順に並べる（SQL8.0のみ有効）
-        {
+    {
         $sql = "SELECT *, 
                 ROW_NUMBER() OVER(ORDER BY book_id ASC) 
                 AS ROW_NUMBER_OVER 
@@ -202,7 +202,7 @@ class DAO
        
 
         return $result;
-        }
+    }
         
 
         public function deleteProcess($book_id)
@@ -222,5 +222,33 @@ class DAO
         $stmt->execute();
 
     }
-        
+
+
+    // ログインしているユーザのクラスの先月の貸出情報を取得
+    public function getLastMonthLending($affiliation_id)
+    {
+        // 貸出履歴の取得
+        $sql = "SELECT l.lent_time, COUNT(*) as count FROM lent AS l 
+                INNER JOIN book AS b 
+                ON l.book_id = b.book_id 
+                WHERE lent_time LIKE :lent_time 
+                AND b.affiliation_id = :affiliation_id 
+                GROUP BY l.lent_time 
+                ORDER BY l.lent_time";
+
+        $stmt = $this->conn->prepare($sql);
+
+        // 先月の月を求める
+        // $lastMonth = new DateTime("-1 month");
+        $lastMonth = new DateTime();
+        $lastMonth = $lastMonth->format("Y-m");
+        $lastMonth = $lastMonth . '%';
+        $stmt->bindValue(":lent_time", $lastMonth);
+        $stmt->bindValue(":affiliation_id", $affiliation_id);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
 }
