@@ -236,11 +236,8 @@ $lentBooks = $dao->getLentNowBooks($user);
                     }
                 }).done(function(result){
                     result = parseInt(result);
-                    alert(result);
                     book = (result - 1);
                     Golink(allBooks, book);
-                    
-                    alert("お探しの本は見つかりませんでした")
                 })
             };
         }
