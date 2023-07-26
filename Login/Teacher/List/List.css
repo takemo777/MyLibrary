@@ -1,0 +1,75 @@
+.breadcrumb {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    top: 30px;
+}
+
+.pan a {
+    color: #000000;
+    text-decoration: none;
+    position: relative;
+    top: -40px;
+    left: 15px
+}
+
+.breadcrumb li {
+    display: inline;
+    font-size: 25px;
+}
+
+/*ボタンのスタイル*/
+.buttonContainer {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+}
+  
+#returnButton {
+    width: 350px;
+    height: 55px;
+    background-color: #FADF6A;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 22px;
+}
+
+
+/*テーブルのデザイン*/
+.container {
+    max-width: 900px;
+    margin: 0 auto; /* テーブルを中央に配置 */
+    padding: 0 20px; /* 両端に20pxの余白を追加 */
+  }
+  
+  .user-table {
+    border-collapse: collapse;
+  }
+  
+  .user-table th {
+    background-color: rgb(68, 114, 196);
+    color: white;
+    padding: 8px;
+    border: 2px solid #ccc;
+  }
+  
+  .user-table td {
+    padding: 8px;
+    border: 2px solid #ccc;
+  }
+  
+  .user-table tr:nth-child(odd) {
+    background-color: rgb(207, 213, 234);
+  }
+  
+  .user-table tr:nth-child(even) {
+    background-color: rgb(233, 235, 245);
+  }
+  
+  .user-table td:last-child {
+    color: red;
+  }
+  
