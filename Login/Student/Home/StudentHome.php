@@ -234,13 +234,10 @@ $lentBooks = $dao->getLentNowBooks($user);
                         "ISBN": ISBN
                         //async:false //同期処理（処理がそこまで重くないプログラムのため）
                     }
-                }).done(function(result) {
-                    book_id = (result - 1);
-                    Golink(allBooks, book_id);
-
-                }).fail(function(result) {
-                    
-                    alert("お探しの本は見つかりませんでした")
+                }).done(function(result){
+                    result = parseInt(result);
+                    book = (result - 1);
+                    Golink(allBooks, book);
                 })
             };
         }

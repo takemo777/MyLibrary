@@ -7,6 +7,7 @@ class DAO
 {
     private $user = "root";
     private $pwd = "";
+
     private $dsn = "mysql:host=localhost;port=3306;dbname=library;";
     private $conn;
 
@@ -176,40 +177,46 @@ class DAO
 
     //ISBNコードからbook_idを返す関数（実装中）
     public function searchISBN($ISBN)
-    //ISBNコードから書籍検索し、該当書籍のbook_idを返す
+        //book_idの若い順に並べる（SQL8.0のみ有効）
     {
+
+        //ISBNからROW_NUMBER_OVERを取ってくる
         $sql = "SELECT *
-                FROM book
+                FROM book2
                 WHERE ISBN = :ISBN";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":ISBN", $ISBN);
         $stmt->execute();
-
+        
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $result = $result['book_id'];
+        $result = $result['num'];
+
+       
 
         return $result;
     }
+        
 
-
-    public function deleteProcess($book_id)
-    {
+        public function deleteProcess($book_id)
+    {   
         // lentテーブルから同じbook_idのものを削除（参照制約の関係）
         $sql = "DELETE FROM lent WHERE book_id = :book_id";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":book_id", $book_id);
         $stmt->execute();
-
+        
         // bookテーブルから同じbook_idのものを削除
         $sql = "DELETE FROM book WHERE book_id = :book_id";
-
+        
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":book_id", $book_id);
         $stmt->execute();
+
     }
+
 
     // ログインしているユーザのクラスの先月の貸出情報を取得
     public function getLastMonthLending($affiliation_id)
@@ -238,6 +245,9 @@ class DAO
 
         return $result;
     }
+
+
+
 
     // ログインしているユーザのクラスの先月の貸出情報を取得
     public function getLastMonthLending($affiliation_id)
@@ -291,3 +301,4 @@ class DAO
         return $result;
     }
 }
+
