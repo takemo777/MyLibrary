@@ -176,8 +176,8 @@ class DAO
 
     //ISBNコードからbook_idを返す関数（実装中）
     public function searchISBN($ISBN)
-        //ISBNコードから書籍検索し、該当書籍のbook_idを返す
-        {
+    //ISBNコードから書籍検索し、該当書籍のbook_idを返す
+    {
         $sql = "SELECT *
                 FROM book
                 WHERE ISBN = :ISBN";
@@ -185,31 +185,58 @@ class DAO
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":ISBN", $ISBN);
         $stmt->execute();
-        
+
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $result = $result['book_id'];
 
         return $result;
-        }
-        
+    }
 
-        public function deleteProcess($book_id)
-    {   
+
+    public function deleteProcess($book_id)
+    {
         // lentテーブルから同じbook_idのものを削除（参照制約の関係）
         $sql = "DELETE FROM lent WHERE book_id = :book_id";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":book_id", $book_id);
         $stmt->execute();
-        
+
         // bookテーブルから同じbook_idのものを削除
         $sql = "DELETE FROM book WHERE book_id = :book_id";
-        
+
         $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(":book_id", $book_id);
         $stmt->execute();
+    }
 
+    // ログインしているユーザのクラスの先月の貸出情報を取得
+    public function getLastMonthLending($affiliation_id)
+    {
+        // 貸出履歴の取得
+        $sql = "SELECT l.lent_time, COUNT(*) as count FROM lent AS l 
+                INNER JOIN book AS b 
+                ON l.book_id = b.book_id 
+                WHERE lent_time LIKE :lent_time 
+                AND b.affiliation_id = :affiliation_id 
+                GROUP BY l.lent_time 
+                ORDER BY l.lent_time";
+
+        $stmt = $this->conn->prepare($sql);
+
+        // 先月の月を求める
+        // $lastMonth = new DateTime("-1 month");
+        $lastMonth = new DateTime();
+        $lastMonth = $lastMonth->format("Y-m");
+        $lastMonth = $lastMonth . '%';
+        $stmt->bindValue(":lent_time", $lastMonth);
+        $stmt->bindValue(":affiliation_id", $affiliation_id);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
     }
 
     // ログインしているユーザのクラスの先月の貸出情報を取得
