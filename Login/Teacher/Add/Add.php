@@ -35,25 +35,25 @@ $user = $dao->getUser($_SESSION["user_id"]);
   </ul>
   <div class="books"> <!-- 本の詳細 -->
     <div class="books"> <!-- 本の詳細 -->
-      <img id="bookImage" src="AddBook.png" class="example1" style="vertical-align:top" alt="ファイルを選択"
-        onclick="openFileInput()">
+      <img id="bookImage" src="AddBook.png" class="example1" style="vertical-align:top" alt="ファイルを選択">
       <input type="file" id="fileInput" name="uploadedFile" class="hidden" onchange="updateImage(event)">
     </div>
     <div class="text">
       <p>
-      <h2>著書名:</h2>
+      <h2>著書名:<input type="text" id="book_title" name="book_title"></h2>
       </p>
       <p>
-      <h2>著者名:</h2>
+      <h2>著者名:<input type="text" id="author_name" name="author_name"></h2>
       </p>
       <p>
-      <h2>出版社:</h2>
+      <h2>出版社:<input type="text" id="publisher" name="publisher"></h2>
       </p>
-      <p>
+      <!--<p>
       <h2>持ち出し:</h2>
-      </p>
+      </p>-->
       <p>
-      <h2>ISBN:</h2>
+      <h2>ISBN:<input type="text" id="isbn" name="isbn"></h2><br>
+      <button id="ISBN-button" class="ISBN-button" onclick="openBarCodeWindow()">ISBNをカメラで入力</button>
       </p>
     </div>
   </div>
@@ -99,51 +99,59 @@ $user = $dao->getUser($_SESSION["user_id"]);
   <script>
 
 
+    function openBarCodeWindow() {
+      var BarCodeWindow = window.open('Barcode.html', '_blank', 'width=600,height=400');
+      BarCodeWindow.onbeforeunload = function () {
+        var BarCodeResult = BarCodeWindow.document.getElementById('jan').value;
+        var ISBNResultElement = document.getElementsByName('isbn')[0]; // input要素を取得
+        ISBNResultElement.value = parseInt(BarCodeResult); // 取得したISBN情報をinput要素に表示
+      }
+    }
     // 画像をクリックしたときの処理
     document.getElementById('bookImage').addEventListener('click', function () {
       document.getElementById('fileInput').click();
     });
 
     // ファイルをアップロードした後の処理
-  function updateImage(event) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const bookImage = document.getElementById('bookImage');
-        bookImage.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
+    function updateImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const bookImage = document.getElementById('bookImage');
+          bookImage.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // フォーカスを別の要素に移動することでエクスプローラーが再度開かれるのを防止する
+      document.body.focus();
     }
 
-    // フォーカスを別の要素に移動することでエクスプローラーが再度開かれるのを防止する
-    document.body.focus();
-  }
+    // フォームデータを作成し、画像を非同期でアップロード
+    function uploadImage() {
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+      const formData = new FormData();
 
-  // フォームデータを作成し、画像を非同期でアップロード
-  function uploadImage() {
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0];
-    const formData = new FormData();
-    
-    // ファイル名を指定する（ここで任意のファイル名を設定）
-    formData.append('uploadedFile', file, '36.jpg');
+      // ファイル名を指定する（ここで任意のファイル名を設定）
+      formData.append('uploadedFile', file, '36.jpg');
 
-    // XMLHttpRequestを使って非同期でファイルをアップロード
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'upload.php', true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          console.log(xhr.responseText); // アップロード結果のレスポンスを表示
-        } else {
-          console.error('アップロードに失敗しました。');
+      // XMLHttpRequestを使って非同期でファイルをアップロード
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', 'upload.php', true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            console.log(xhr.responseText); // アップロード結果のレスポンスを表示
+          } else {
+            console.error('アップロードに失敗しました。');
+          }
         }
-      }
-    };
-    xhr.send(formData);
-  }
-  
+      };
+      xhr.send(formData);
+    }
+
     //はいいいえダイアログ
     function openDialog() {
       var dialog = document.getElementById("dialog");
@@ -175,8 +183,12 @@ $user = $dao->getUser($_SESSION["user_id"]);
     }
 
     function deleteDialog() {
+      var bookTitle = document.getElementById("book_title").value;
+      var authorName = document.getElementById("author_name").value;
+      var publisher = document.getElementById("publisher").value;
+      var isbn = document.getElementById("isbn").value;
       var dialog = document.getElementById("dialog3");
-      if (document.getElementById('fileInput').value) {
+      if (document.getElementById('fileInput').value || bookTitle || authorName || publisher || isbn) {
         dialog3.style.display = "block"; // 画像がアップロードされていればdeleteDialog()を実行
       } else {
         redirectToHome(); // 画像がアップロードされていなければredirectToHome()を実行
