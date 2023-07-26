@@ -6,7 +6,7 @@ require_once("Book.php");
 class DAO
 {
     private $user = "root";
-    private $pwd = "moku2440";
+    private $pwd = "";
     private $dsn = "mysql:host=localhost;port=3306;dbname=library;";
     private $conn;
 
@@ -211,5 +211,28 @@ class DAO
         $stmt->execute();
 
     }
-        
+    
+    // 滞納者一覧を取得する関数
+    public function getDelinquentUsers(): array
+    {
+        // 現在の日付と時刻を取得
+        $currentDateTime = new DateTime();
+        // タイムゾーンを日本に設定
+        $currentDateTime->setTimezone(new DateTimeZone('Asia/Tokyo'));
+        $currentDateTimeString = $currentDateTime->format('Y-m-d');
+
+        $sql = "SELECT u.user_name, b.book_name, l.return_due_date,
+                DATEDIFF(:current_date, l.return_due_date) AS overdue_days
+                FROM lent AS l
+                INNER JOIN book AS b ON l.book_id = b.book_id
+                INNER JOIN users AS u ON l.user_id = u.user_id
+                WHERE l.lending_status = '貸出中' AND :current_date > l.return_due_date";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(":current_date", $currentDateTimeString);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }
