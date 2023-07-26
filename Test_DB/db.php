@@ -211,6 +211,34 @@ class DAO
         $stmt->execute();
 
     }
+
+    // ログインしているユーザのクラスの先月の貸出情報を取得
+    public function getLastMonthLending($affiliation_id)
+    {
+        // 貸出履歴の取得
+        $sql = "SELECT l.lent_time, COUNT(*) as count FROM lent AS l 
+                INNER JOIN book AS b 
+                ON l.book_id = b.book_id 
+                WHERE lent_time LIKE :lent_time 
+                AND b.affiliation_id = :affiliation_id 
+                GROUP BY l.lent_time 
+                ORDER BY l.lent_time";
+
+        $stmt = $this->conn->prepare($sql);
+
+        // 先月の月を求める
+        // $lastMonth = new DateTime("-1 month");
+        $lastMonth = new DateTime();
+        $lastMonth = $lastMonth->format("Y-m");
+        $lastMonth = $lastMonth . '%';
+        $stmt->bindValue(":lent_time", $lastMonth);
+        $stmt->bindValue(":affiliation_id", $affiliation_id);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
     
     // 滞納者一覧を取得する関数
     public function getDelinquentUsers(): array
