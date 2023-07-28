@@ -13,7 +13,11 @@ if (!isset($_SESSION["user_id"])) {
 $dao = new DAO();
 // 引数にセッション変数のuser_idを指定してDAOクラスのgetUserメソッドを実行しUserインスタンスを変数userに格納
 $user = $dao->getUser($_SESSION["user_id"]);
+
+$lastBookId = $dao->getLastBookId();
+$affiliation_id = $user->getAffiliationId();
 ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -48,9 +52,6 @@ $user = $dao->getUser($_SESSION["user_id"]);
       <p>
       <h2>出版社:<input type="text" id="publisher" name="publisher"></h2>
       </p>
-      <!--<p>
-      <h2>持ち出し:</h2>
-      </p>-->
       <p>
       <h2>ISBN:<input type="text" id="ISBN" name="ISBN"></h2><br>
       <button id="ISBN-button" class="ISBN-button" onclick="openBarCodeWindow()">ISBNをカメラで入力</button>
@@ -102,8 +103,12 @@ $user = $dao->getUser($_SESSION["user_id"]);
     </div>
   </div>
 
-  <script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+  <script>
+    var book_id = <?php echo json_encode($lastBookId); ?>;
+    var image = book_id + ".jpg";
+    var affiliation_id = <?php echo json_encode($affiliation_id); ?>;
 
     function openBarCodeWindow() {
       var BarCodeWindow = window.open('Barcode.html', '_blank', 'width=600,height=400');
@@ -123,7 +128,7 @@ $user = $dao->getUser($_SESSION["user_id"]);
     function updateImage(event) {
       const file = event.target.files[0];
       if (file) {
-        // ファイルが画像であるかを判定
+        // ファイルが画像であるかをMIMEタイプで判定
         if (!file.type.startsWith('image/')) {
           // ファイルが画像でない場合、ダイアログを表示
           const dialog = document.getElementById('dialog6');
@@ -139,9 +144,6 @@ $user = $dao->getUser($_SESSION["user_id"]);
         };
         reader.readAsDataURL(file);
       }
-
-      // フォーカスを別の要素に移動することでエクスプローラーが再度開かれるのを防止する
-      document.body.focus();
     }
 
     // フォームデータを作成し、画像を非同期でアップロード
@@ -149,9 +151,8 @@ $user = $dao->getUser($_SESSION["user_id"]);
       const fileInput = document.getElementById('fileInput');
       const file = fileInput.files[0];
       const formData = new FormData();
-
-      // ファイル名を指定する（ここで任意のファイル名を設定）
-      formData.append('uploadedFile', file, '36.jpg');
+      // ファイル名を指定する
+      formData.append('uploadedFile', file, image);
 
       // XMLHttpRequestを使って非同期でファイルをアップロード
       const xhr = new XMLHttpRequest();
@@ -166,6 +167,8 @@ $user = $dao->getUser($_SESSION["user_id"]);
         }
       };
       xhr.send(formData);
+
+
     }
 
     //はいいいえダイアログ
@@ -190,6 +193,27 @@ $user = $dao->getUser($_SESSION["user_id"]);
     function openComplete() {
       var dialog = document.getElementById("dialog2");
 
+      var book_name = document.getElementById("book_name").value;
+      var author = document.getElementById("author").value;
+      var publisher = document.getElementById("publisher").value;
+      var ISBN = document.getElementById("ISBN").value;
+
+      // 非同期通信でAjax.php
+      $.ajax({
+
+        type: 'post',
+        url: "../../../Test_DB/Ajax.php",
+        data: {
+          "processing": "add", //"貸出処理か返却処理かをAjax.phpで判断するためにprocessing変数を用意
+          "book_id": book_id,
+          "affiliation_id": affiliation_id,
+          "book_name": book_name,
+          "author": author,
+          "publisher": publisher,
+          "image": image,
+          "ISBN": ISBN
+        }
+      });
       closeDialog();
       dialog.style.display = "block";
 
