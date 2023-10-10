@@ -141,7 +141,7 @@ ApacheとMySQLを右のStartで起動させてください。
 phpMyAdminの左上にある「新規作成」を選択します。
 データベース名は「library」にしてください。
 その後、「新しいテーブルを作成」と出ますが、上のインポートを選択してください。
-「ファイルを選択」で同封している。library.sql[Contribution guidelines for this project](MyLibrary/library.sql)を選択してページ一番下にある「インポート」を選択してください
+「ファイルを選択」で同封している。[Contribution guidelines for this project](library.sql)を選択してページ一番下にある「インポート」を選択してください
 
 6.完成
 これで準備は完了です。
