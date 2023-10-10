@@ -151,11 +151,3 @@ http://localhost/MyLibrary/Login/Login.php
 【注意】
 このシステムはMicrosoft Edgeでの動作を確認しています。
 他のブラウザで実行するとボタンなどの位置がズレたりする可能性があります。
-
-＜ログインユーザー一覧＞
-ユーザID    	パスワード　　    名前   　　区分           クラス
-　 1           sy8888        須賀       teacher      ITE4-1
-   2           as1207        相川       student      ITE4-1
-   3           um1020        植木       student      ITE4-1
-   4           ya9029        山本       teacher      ITE3-1
-   5           ay1092        阿部       student      ITE3-1
