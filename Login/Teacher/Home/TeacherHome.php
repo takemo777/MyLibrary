@@ -63,7 +63,7 @@ $lentBooks = $dao->getLentNowBooks($user);
         <li class="pan"><a href="../Home/TeacherHome.php">ホーム</a></li>
         <div class="relative">
             <img src="HomeImage/QRtext.png" class="big">
-            <img src="HomeImage/QRsample.png" class="small" alt="QRコード" onclick="openQrCodeWindow()">
+            <img src="HomeImage/QRsample.png" class="small" alt="QRコード" onclick="openBarCodeWindow()">
         </div>
     </ul>
     <br>
@@ -209,7 +209,7 @@ $lentBooks = $dao->getLentNowBooks($user);
 
         function openQrCodeWindow() {
             //QRcode.htmlを別ウインドウで600×400の大きさで開く
-            var qrCodeWindow = window.open('Qrcode.html', '_blank', 'width=600,height=400');
+            var qrCodeWindow = window.open('../../../Barcode/Barcode.html', '_blank', 'width=600,height=400');
             qrCodeWindow.onbeforeunload = function() {
                 //QRコードから読み取った情報をint型に変換してGolink関数へ送る
                 var qrCodeResult = qrCodeWindow.document.getElementById('qr').value;
@@ -217,8 +217,8 @@ $lentBooks = $dao->getLentNowBooks($user);
                 Golink(allBooks, qrCodeValue);
             };
         }
-        /*
-                //バーコードを読み込む関数（実装中）
+        
+                //バーコードを読み込む関数
                 function openBarCodeWindow() {
                     //Barcode.htmlを別ウインドウで600×400の大きさで開く
                     var BarCodeWindow = window.open('Barcode.html', '_blank', 'width=600,height=400');
@@ -226,14 +226,14 @@ $lentBooks = $dao->getLentNowBooks($user);
                         //バーコードから読み取った情報をint型に変換してsearchISBN経由でGolink関数へ送る
                         var BarCodeResult = BarCodeWindow.document.getElementById('jan').value;
                         var BarCodeValue = parseInt(BarCodeResult);
-                        const ISBN = <?php echo $book["ISBN"]; ?>;
+                        const ISBN = BarCodeValue;
 
 
                         // 非同期通信でAjax.phpにuser_idとbook_idを送信
                          $.ajax({
 
                         type: 'post',
-                        url: "../../../Test_DB/Ajax2.php",
+                        url: "../../../Test_DB/Ajax.php",
                         data: {
                          "processing": "ISBN",
                          "ISBN": ISBN,
@@ -243,7 +243,7 @@ $lentBooks = $dao->getLentNowBooks($user);
                         closeDialog();
                         dialog.style.display = "block";
                      }
-                }*/
+                }
 
 
         // AjaxでAjax.phpにグラフ表示を促す関数。非同期で行う
