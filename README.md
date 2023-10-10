@@ -97,19 +97,19 @@ Header.php
 
 ## 図書館システム 導入方法
 
-1.XAMPPをインストールする
+### 1.XAMPPをインストールする
 XAMPPを
 https://www.apachefriends.org/jp/index.html
 からWindows版をダウンロードし、xampp-windows-x64-8.2.4-0-VS16-installer.exeを実行し、インストールします。
 （確認画面が数回出ますが、Nextで進めてください）
 
-2.Pythonをインストールする
+### 2.Pythonをインストールする
 Pythonを
 https://www.python.org/downloads/
 からダウンロードし、.exeを実行し、インストールします。
 （基本的なPythonのライブラリはここで入ります）
 
-3.Pythonで必要なライブラリをダウンロードする
+### 3.Pythonで必要なライブラリをダウンロードする
 この「図書館システム」では、ニューラルネットワークを活用した本の貸出冊数予想を行うため、別のライブラリのインストールが必要です。
 Windowsの「検索」からcmdと検索し、コマンドプロンプトを起動させます。
 コマンドプロンプトに以下をコピー＆ペーストして実行させてください。
@@ -129,10 +129,10 @@ py -m pip install python-dateutil==2.8.2
 py -m pip install six==1.16.0
 py -m pip install sklearn
 
-4.図書館システムを設置する
+### 4.図書館システムを設置する
 xammpフォルダーの中にあるhtdocsの中にMyLibraryが来るように設置してください
 
-5.xamppを起動させて、データベースを作る
+### 5.xamppを起動させて、データベースを作る
 xamppフォルダーの中にあるxampp-control.exeを起動させてください
 ApacheとMySQLを右のStartで起動させてください。
 その後、MySQLと同じ行にあるAdminを押してください。
@@ -143,7 +143,7 @@ phpMyAdminの左上にある「新規作成」を選択します。
 その後、「新しいテーブルを作成」と出ますが、上のインポートを選択してください。
 「ファイルを選択」で同封しているlibrary.sqlを選択してページ一番下にある「インポート」を選択してください
 
-6.完成
+### 6.完成
 これで準備は完了です。
 http://localhost/MyLibrary/Login/Login.php
 にアクセスしてください。
