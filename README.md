@@ -99,6 +99,7 @@ Header.php
 ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
 
 ＜図書館システム 導入方法＞
+
 1.XAMPPをインストールする
 XAMPPを
 https://www.apachefriends.org/jp/index.html
